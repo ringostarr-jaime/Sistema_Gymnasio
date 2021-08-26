@@ -1,0 +1,420 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="content">   
+                <f:event type="preRenderView" listener="#{personaBean.listar('f')}"></f:event>
+                <f:event type="preRenderView" listener="#{productoBean.listarProductos('f',1,0,1)}"></f:event>
+                <f:event type="preRenderView" listener="#{productoBean.listarOtrosProductos('f',1,1,1)}"></f:event>
+                <f:event type="preRenderView" listener="#{ventaBeans.obtenerUltimo('f')}"></f:event>
+                <f:event type="preRenderView" listener="#{ventaBeans.listarClientes2(1,'f')}"></f:event>
+                <f:event type="preRenderView" listener="#{indexBean.nombreUsuario()}"></f:event>               
+                <p:growl autoUpdate="true" life="1500" showDetail="true" />
+                <!--<h2>Factura</h2>-->
+                <br/>                
+                <h:form id="fmFactura" rendered="#{indexBean.verificarPermisos(3,13,1)}">
+                    <!--<p:inputText value="# {ventaBeans.cantidad}"/>-->                    
+                    <p:panel header="KS * KORYSHINE FITNESS CLUB" style="width:  1000px; margin: 0 auto; text-align: center">
+                        <p:layout id="lyDatosCliente" style="width:  100%; height:  200px">
+                            <p:layoutUnit id="datosCliente" position="center" 
+                                          style="padding: 5px; text-align: justify; font-size: 14px" size="300">
+                                <!--CLIENTES-->
+                                <h:panelGrid id="pgBuscarCliente" columns="5">
+                                    <p:outputLabel value="Codigo cliente" style="font-weight: bold"/>
+                                    <p:inputText disabled="true" id="lblCliente" value="#{ventaBeans.clientes.idcliente}" style="text-align: center; font-weight:">
+                                        <!--<p:ajax event="keyup" listener="# {facturaBean.agregarDatosCliente2()}"
+                                                update=":fmFactura:pgDatosCliente txtCliente"></p:ajax>-->
+                                    </p:inputText>
+                                    <p:commandButton id="btnBuscarCliente" value="Buscar" oncomplete="PF('dialogCliente').show()" 
+                                                     update="fm:dlgClientes" rendered="#{ventaBeans.ver}" />
+
+                                    <p:outputLabel value="Fecha " style="font-weight: bold"/>
+                                    <p:clock pattern="dd-MM-yyyy HH:mm:ss" mode="server" />   
+                                </h:panelGrid>
+                                <p:separator/>
+
+                                <h:panelGrid id="pgDatosCliente" columns="2">
+                                    <p:outputLabel value="Nombre: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblNombreCliente" value="#{ventaBeans.clientes.nombreCompleto}" />
+
+                                    <p:outputLabel value="Dui: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblDui" value="#{ventaBeans.clientes.dui}" />
+
+                                    <p:outputLabel value="Correo: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblCorreoCliente" value="#{ventaBeans.clientes.correo}" />
+
+                                    <p:outputLabel value="Telefono: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblTelefonoCliente" value="#{ventaBeans.clientes.telefono}" />
+                                    <p:separator/>
+                                    <br/>
+                                    <p:outputLabel value="Generado por: " style="font-weight: bold"/>
+                                    <p:outputLabel id="lblUsuario" value="#{indexBean.usuarioNombre}" />
+
+
+                                </h:panelGrid>
+                                <!--CLIENTES-->       
+
+                            </p:layoutUnit>
+                            <p:layoutUnit id="datosFactura" position="east" 
+                                          style="padding: 5px; text-align: center;" size="250">                               
+                                <h:panelGrid columns="1" style="font-size: 18px; font-weight: bold;">                                   
+                                    <!--FACTURA-->
+                                    COMPROBANTE DE PAGO
+                                    <p:outputLabel value="000#{ventaBeans.ultimoIdFactura}"></p:outputLabel>
+                                    <p:graphicImage name="logo2.jpg" library="img" width="200px" height="100px"/>
+                                </h:panelGrid>
+                            </p:layoutUnit>
+
+                        </p:layout>
+                        <p:separator/>
+                        <!--OTROS MENSUALIDADES-->
+
+                        <h:panelGrid id="pgBuscarProducto2" columns="3">
+                            <p:outputLabel value="Otros productos" style="font-weight: bold; font-size: 14px;" rendered="#{ventaBeans.ver}"/> 
+                            <p:commandButton id="btnBuscarProductos2" value="Buscar" oncomplete="PF('dialogProductos2').show()"
+                                             update=":fm:tablaProductos2" rendered="#{ventaBeans.ver}" />
+                        </h:panelGrid>
+                        <p:separator/>
+
+
+                        <p:dataTable id="dtProductosFactura2" var="item2" value="#{ventaBeans.listaDetalleFactura2}"
+                                     disabledSelection="true" disabledTextSelection="true" style="text-align: center"
+                                     rendered="#{ventaBeans.listaDetalleFactura2.size()>0}">                            
+                            <p:column headerText="Actividad">
+                                <h:outputText value="#{item2.nombreProducto}"/>
+                            </p:column>                           
+                            <p:column headerText="Valor">
+                                $ <h:outputText value="#{item2.precioVenta}"/>
+                            </p:column>
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{item2.cantidad}"/>
+                            </p:column>
+                            <p:column headerText="Fecha Inicio">
+                                <h:outputText value="#{item2.fechaI}" />
+                            </p:column>
+                            <p:column headerText="Fecha Final">
+                                <h:outputText value="#{item2.fechaF}" />
+                            </p:column>
+                            <p:column headerText="Eliminar" rendered="#{ventaBeans.ver and indexBean.verificarPermisos(3,12,1)}">
+                                <!--ELIMINAR DATOS-->                                    
+                                <p:commandButton id="delete2" icon="ui-icon-trash" value="Eliminar" 
+                                                 update=":fmFactura:dtProductosFactura2 :fmFactura" 
+                                                 actionListener="#{ventaBeans.quitar2(item2)}" rendered="#{ventaBeans.ver}">                                                   
+                                </p:commandButton>   
+                            </p:column>                             
+                        </p:dataTable>
+                        <!--OTROS MENSUALIDADES-->
+
+                        <br/>
+                        <!--PRODUCTOS-->
+                        <h:panelGrid id="pgBuscarProducto" columns="3">
+                            <p:outputLabel value="Productos" style="font-weight: bold; font-size: 14px;" rendered="#{ventaBeans.ver}"/>                           
+                            <!--<p:inputText placeholder="Codigo" size="12"></p:inputText>-->
+                            <p:commandButton id="btnBuscarProductos" value="Buscar" oncomplete="PF('dialogProductos').show()"
+                                             update=":fm:tablaProductos" rendered="#{ventaBeans.ver}" />
+                        </h:panelGrid>
+                        <p:separator/>
+
+                        <p:dataTable id="dtProductosFactura" var="item" value="#{ventaBeans.listaDetalleFactura}"
+                                     disabledSelection="true" disabledTextSelection="true" style="text-align: center"                                       
+                                     rendered="#{ventaBeans.listaDetalleFactura.size()>0}" >
+                            <p:column headerText="Codigo de barra">
+                                <h:outputText value="#{item.codBarra}"/>
+                            </p:column>
+                            <p:column headerText="Producto">
+                                <h:outputText value="#{item.nombreProducto}"/>
+                            </p:column>
+                            <p:column headerText="Cantidad">
+                                <h:outputText value="#{item.cantidad}"/>
+                            </p:column>
+                            <p:column headerText="Precio de venta">
+                                $ <h:outputText value="#{item.precioVenta}"/>
+                            </p:column>
+                            <p:column headerText="Total">
+                                $ <h:outputText value="#{ventaBeans.totalp(item.precioVenta, item.cantidad)}" />
+                            </p:column>  
+                            <p:column headerText="Eliminar" rendered="#{ventaBeans.ver and indexBean.verificarPermisos(3,12,1)}">
+                                <!--ELIMINAR DATOS-->                                    
+                                <p:commandButton id="delete" icon="ui-icon-trash" value="Eliminar" 
+                                                 update=":fmFactura:dtProductosFactura :fmFactura" 
+                                                 actionListener="#{ventaBeans.quitar1(item)}" rendered="#{ventaBeans.ver}" >                                                   
+                                </p:commandButton>   
+                            </p:column> 
+                        </p:dataTable>   
+                       <!-- <div align="center">
+                        HORARIO DE GIMNASIO:
+                        <h:panelGrid columns="2" border="1">
+                            <p:outputLabel value="Lunes a jueves:"/>                            
+                            <p:outputLabel value="5:00 am - 8:30pm "/>                            
+                            <p:outputLabel value="Viernes:"/>                          
+                            <p:outputLabel value="5:00am-8:00pm"/>                            
+                            <p:outputLabel value="Sabados:"/>                           
+                            <p:outputLabel value="6:00am - 12:00pm"/>                            
+                        </h:panelGrid>
+
+                        HORARIO DE SPINNING:
+                        <h:panelGrid columns="2" border="1">
+                            <p:outputLabel value="Lunes a viernes"/>
+                            <p:outputLabel value="6:00 am - 6:45 am"/>                           
+                            <p:outputLabel value="Tarde:"/>                           
+                            <p:outputLabel value="5:00 pm - 5:45 pm"/>
+                            <p:outputLabel value="6:00 pm - 6:45 pm"/>
+                            <p:outputLabel value="7:00 pm - 7:45 pm"/>
+                            <p:outputLabel value="Sabados:"/> 
+                            <p:outputLabel value="6:00am - 6:45am"/>
+                        </h:panelGrid>
+                        </div>-->
+                        
+                        <div align="left">
+                        <p:outputLabel value="Numero de teléfono 6142-9396" style="font-size: 14px;"/>
+                        <br/>
+                        <p:outputLabel value="Instagram: koryshine.sv" style="font-size: 14px;"/>
+                        <br/>
+                        <p:outputLabel value="Facebook: koryshine Fitness Club" style="font-size: 14px;"/>
+                        <br/>
+                        <p:outputLabel value="*SE TE REGALA UN DÍA DE PRUEBA TOTALMENTE GRATIS *" style="font-size: 14px;" />
+                        <br/>
+                        </div>
+                        <h:outputText value="TOTAL DE VENTA $ #{ventaBeans.valueSellTotal3()}" style="align-content: center; font-weight: bold; font-size: 16px; " />
+                        <br/>                     
+                        <p:separator/>
+                        <!--PRODUCTOS-->
+
+                        <!--BLOCK-->
+                        <p:blockUI block="fmFactura" trigger="fmFactura:dtProductosFactura:delete fmFactura:dtProductosFactura2:delete2 fm:registrar"  >
+                            <p:graphicImage value="../resources/img/load3.gif"/>
+                        </p:blockUI>  
+                        <!--BLOCK-->
+                        <div class="card"> 
+                            <p:growl id="message" showDetail="true"/>                        
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                                <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                                <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
+                            </p:confirmDialog>   
+                        </div>
+
+                    </p:panel>
+                </h:form>
+
+                <br/>              
+                <p:separator/>
+
+                <h:form id="fm">
+                    <div align="center">
+                        <p:commandButton value="Registrar" style="width: 150px; height: 60px" update="fmFactura fm"
+                                         id="registrar" disabled="#{!ventaBeans.ver}" rendered="#{indexBean.verificarPermisos(3,10,1)}"
+                                         actionListener="#{ventaBeans.registrar()}"
+                                         icon="ui-icon-disk">
+                            <p:confirm header="Desea registrar la venta?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>                                    
+                        </p:commandButton>  
+                        &nbsp;    
+                        <p:commandButton value="Imprimir" type="button" style="width: 150px; height: 60px"   
+                                         id="btnImprimir"
+                                       disabled="#{ventaBeans.ver}"
+                                         rendered="#{indexBean.verificarPermisos(3,14,1)}"
+                                         update="btnBuscarProductos btnBuscarCliente"                                          
+                                         icon="ui-icon-print">
+                            <p:printer target="fmFactura"/>
+                        </p:commandButton>                       
+                        &nbsp;
+                        <p:commandButton value="Nuevo" style="width: 150px; height: 60px" 
+                                         icon="ui-icon-plus"
+                                         action="venta?faces-redirect=true"></p:commandButton>                 
+                    </div>
+
+                    <p:dialog id="dlgClientes" widgetVar="dialogCliente" modal="true" style="width: 700px"
+                              resizable="false" showEffect="fade" hideEffect="explode">
+                        <p:dataTable id="tablaCliente" 
+                                     rows="5"
+                                     reflow="true"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                     rowsPerPageTemplate="5,10,15"
+                                     scrollable="true"
+                                     var="tb" value="#{ventaBeans.clientesLista}" emptyMessage="No hay datos que mostrar">
+
+                            <p:column headerText="Codigo">
+                                <h:outputText value="#{tb.idcliente}"/>
+                            </p:column>
+
+                            <p:column headerText="Dui">
+                                <p:outputLabel value="#{tb.dui}" />                                
+                            </p:column>
+
+                            <p:column headerText="Nombre del Cliente">
+                                <h:outputText value="#{tb.nombreCompleto}" />
+                            </p:column>
+
+                            <p:column headerText="Correo" >
+                                <h:outputText value="#{tb.correo}" />                              
+                            </p:column>
+                            <p:column headerText="Telefono">                       
+                                <h:outputText value="#{tb.telefono}" />
+                            </p:column>
+                            <p:column headerText="Buscar" filterBy="#{tb.nombreCompleto} #{tb.idcliente} #{tb.correo} #{tb.telefono} #{tb.dui}" filterMatchMode="contains">
+                                <div align="center">
+                                    <p:commandButton icon="ui-icon-check" value="Seleccionar" update="fmFactura"
+                                                     id="btnCliente"
+                                                     rendered="#{indexBean.verificarPermisos(3,10,1)}"
+                                                     actionListener="#{ventaBeans.leerID(tb)}"
+                                                     oncomplete="PF('dialogCliente').hide()">
+                                    </p:commandButton>
+                                </div>
+                            </p:column>
+
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" icon="ui-icon-close" oncomplete="PF('dialogCliente').hide()"></p:commandButton>
+                    </p:dialog>
+
+                    <!--DIALOGO DE PRODUCTOS-->
+                    <p:dialog id="dlgProductos" widgetVar="dialogProductos" modal="true" style="width: 700px"
+                              resizable="false" showEffect="fade" hideEffect="explode">
+                        <p:dataTable id="tablaProductos" paginator="true" paginatorPosition="top" scrollable="true"
+                                     rows="5"
+                                     rowsPerPageTemplate="5,10,15" 
+                                     var="pro" value="#{productoBean.listProductos}" emptyMessage="No hay datos que mostrar">
+
+                            <p:column headerText="Codigo">
+                                <h:outputText value="#{pro.codProducto}"/>
+                            </p:column>
+
+                            <p:column headerText="Nombre del producto">
+                                <h:outputText value="#{pro.nombreProducto}" />
+                            </p:column>
+
+                            <p:column headerText="Precio de venta" sortBy="#{pro.precioVenta}">
+                                $<h:outputText value="#{pro.precioVenta}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad">   
+                                <p:spinner  min="1" max="9999999999" stepFactor="1" value="#{pro.cantidad}">                                       
+                                    <f:converter converterId="javax.faces.Integer" />                                   
+                                </p:spinner>                                
+                            </p:column>
+
+                            <p:column headerText="Stock actual">
+                                <h:outputText value="#{pro.stockActual}" />
+                            </p:column>
+
+                            <p:column headerText="Codigo barra">
+                                <h:outputText value="#{pro.codBarra}" />
+                            </p:column>
+
+                            <p:column headerText="Buscar" filterBy="#{pro.nombreProducto} #{pro.codProducto} #{pro.codBarra}" filterMatchMode="contains">
+                                <div align="center">
+                                    <p:commandButton icon="ui-icon-check" value="Seleccionar" 
+                                                     disabled="#{!(pro.stockActual>0)}"
+                                                     update=":fmFactura:dtProductosFactura :fmFactura"
+                                                     rendered="#{indexBean.verificarPermisos(3,10,1)}"
+                                                     actionListener="#{ventaBeans.buscarProducto(pro)}"
+                                                     oncomplete="PF('dialogProductos').hide()">
+                                    </p:commandButton>
+                                </div>
+                            </p:column> 
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" icon="ui-icon-close" oncomplete="PF('dialogProductos').hide()"></p:commandButton>
+                    </p:dialog>
+                    <!--DIALOGO DE PRODUCTOS-->
+
+                    <!--DIALOGO DE PRODUCTOS2-->
+                    <p:dialog id="dlgProductos2" widgetVar="dialogProductos2" modal="true" style="width: 700px"
+                              resizable="false" showEffect="fade" hideEffect="explode">
+                        <p:dataTable id="tablaProductos2" paginator="true" paginatorPosition="top" scrollable="true"
+                                     rows="5"
+                                     rowsPerPageTemplate="5,10,15" 
+                                     var="pro2" value="#{productoBean.listProductos2}" emptyMessage="No hay datos que mostrar">
+
+                            <p:column headerText="Codigo">
+                                <h:outputText value="#{pro2.codProducto}"/>
+                            </p:column>
+
+                            <p:column headerText="Nombre del producto">
+                                <h:outputText value="#{pro2.nombreProducto}" />
+                            </p:column>
+
+                            <p:column headerText="Precio de venta" sortBy="#{pro2.precioVenta}">
+                                $<h:outputText value="#{pro2.precioVenta}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad">   
+                                <p:spinner  min="1" max="9999999999" stepFactor="1" value="#{pro2.cantidad}">                                       
+                                    <f:converter converterId="javax.faces.Integer" />                                   
+                                </p:spinner>                                
+                            </p:column>
+
+                            <p:column headerText="Fecha inicio"> 
+                                <p:calendar id="txtFechaInicio" value="#{ventaBeans.fechaInicio}" 
+                                            pages="3" navigator="true"
+                                            pattern="dd-MM-yyyy" mask="true" locale="es" >                                                                       
+                                </p:calendar> 
+                            </p:column>
+
+                            <p:column headerText="Fecha final"> 
+                                <p:calendar id="txtFechaFinal" value="#{ventaBeans.fechaFinal}" 
+                                            pages="3" navigator="true"
+                                            pattern="dd-MM-yyyy" mask="true" locale="es" >
+                                    <!--<p:ajax event="dateSelect" listener="# {clientesBean.onDateSelect}" update="txtEdad"/>-->                                         
+                                </p:calendar> 
+                            </p:column>
+
+                            <p:column headerText="Buscar" filterBy="#{pro2.nombreProducto} #{pro2.codProducto} #{pro2.codBarra}" filterMatchMode="contains">
+                                <div align="center">
+                                    <p:commandButton icon="ui-icon-check" value="Seleccionar" 
+                                                     update=":fmFactura:dtProductosFactura2 :fmFactura"
+                                                     rendered="#{indexBean.verificarPermisos(3,10,1)}"
+                                                     actionListener="#{ventaBeans.buscarProducto(pro2)}"
+                                                     oncomplete="PF('dialogProductos2').hide()">
+                                    </p:commandButton>
+                                </div>
+                            </p:column> 
+                        </p:dataTable>
+                        <p:commandButton value="Cerrar" icon="ui-icon-close" oncomplete="PF('dialogProductos2').hide()"></p:commandButton>
+                    </p:dialog>
+                    <!--DIALOGO DE PRODUCTOS2-->
+
+                </h:form>    
+
+                <script type="text/javascript">
+                    PrimeFaces.locales['es'] = {
+                        closeText: 'Cerrar',
+                        prevText: 'Anterior',
+                        nextText: 'Siguiente',
+                        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                        dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+                        weekHeader: 'Semana',
+                        firstDay: 1,
+                        isRTL: false,
+                        showMonthAfterYear: false,
+                        yearSuffix: '',
+                        timeOnlyTitle: 'Sólo hora',
+                        timeText: 'Tiempo',
+                        hourText: 'Hora',
+                        minuteText: 'Minuto',
+                        secondText: 'Segundo',
+                        currentText: 'Fecha actual',
+                        ampm: false,
+                        month: 'Mes',
+                        week: 'Semana',
+                        day: 'Día',
+                        allDayText: 'Todo el día',
+                        today: 'Hoy',
+                        clear: 'Claro'
+                    };
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

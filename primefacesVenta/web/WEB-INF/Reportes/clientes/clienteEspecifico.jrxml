@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#FFFFFF" lineSpacing="Single" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" lineSpacing="Single" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" lineSpacing="Single" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" lineSpacing="Single" fontName="Arial" fontSize="12"/>
+	<parameter name="CONTEXT" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/"+$P{CONTEXT}.toString()+"/Reportes/clientes/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idCliente" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT idclientes,CONCAT(nombres,' ',apellidos) nombre,telefono,
+fechaNacimiento,correo, estado, nota, dui,imagen
+FROM ventas.clientes
+left join ventas.imagenes on id=idclientes
+where idclientes= CONVERT(($P{idCliente}),INTEGER)]]>
+	</queryString>
+	<field name="idclientes" class="java.lang.Integer">
+		<fieldDescription><![CDATA[El idclientes se cruza con el campo id de la tabla imagenes para sacar la imagen blob]]></fieldDescription>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="telefono" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechaNacimiento" class="java.sql.Date">
+		<fieldDescription><![CDATA[la edad se muestra en java en base a restar el year actual con la fecha de nacimiento y si el mes es mayor al actual se resta 1]]></fieldDescription>
+	</field>
+	<field name="correo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="estado" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ESTADOS = 1 activo, 0 mora, 2 desactivado]]></fieldDescription>
+	</field>
+	<field name="nota" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dui" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="imagen" class="java.lang.Object">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="ContarClientes" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{idclientes}]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="97">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="95" backcolor="#000000"/>
+				<staticText>
+					<reportElement style="Title" x="0" y="0" width="370" height="66"/>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[KORYSHINE FITNESS CLUB]]></text>
+				</staticText>
+			</frame>
+			<image hAlign="Center">
+				<reportElement x="653" y="0" width="144" height="95"/>
+				<imageExpression class="java.lang.String"><![CDATA["/"+$P{CONTEXT}.toString()+"/resources/img/logo2.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="32">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="32" forecolor="#000000" backcolor="#CC0000"/>
+				<staticText>
+					<reportElement x="230" y="0" width="277" height="32" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[REPORTE DE CLIENTE
+KORYSHINE FITNESS CLUB
+]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="331">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="116" y="27" width="187" height="26"/>
+				<textElement textAlignment="Left" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{idclientes}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="116" y="53" width="187" height="23"/>
+				<textElement textAlignment="Left" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="0" y="223" width="802" height="100"/>
+				<subreportParameter name="idCliente">
+					<subreportParameterExpression><![CDATA[$P{idCliente}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "clienteEspecifico_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="116" y="76" width="187" height="26"/>
+				<textElement textAlignment="Left" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{dui}==null?"000000000":$F{dui}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="116" y="102" width="187" height="26"/>
+				<textElement textAlignment="Left" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{estado}==1?"VIGENTE":$F{estado}==2?"DESACTIVADO":"MORA"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
+				<reportElement x="116" y="175" width="215" height="26"/>
+				<textElement textAlignment="Left" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{fechaNacimiento}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="116" y="128" width="215" height="25"/>
+				<textElement textAlignment="Left" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="363" y="53" width="215" height="126"/>
+				<textElement textAlignment="Justified" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nota}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="116" y="153" width="215" height="22"/>
+				<textElement textAlignment="Left" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{correo}]]></textFieldExpression>
+			</textField>
+			<rectangle radius="30">
+				<reportElement mode="Transparent" x="13" y="16" width="774" height="193"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="28" y="27" width="88" height="26"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CODIGO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="28" y="53" width="88" height="23"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="28" y="76" width="88" height="26"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DUI:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="28" y="102" width="88" height="26"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="175" width="87" height="26"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="128" width="87" height="25"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TELEFONO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="28" y="153" width="88" height="22"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CORREO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="363" y="27" width="101" height="26"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMENTARIO]]></text>
+			</staticText>
+			<image>
+				<reportElement x="617" y="27" width="170" height="156"/>
+				<imageExpression class="java.lang.String"><![CDATA[net.sf.jasperreports.engine.util.JRImageLoader.loadImage ((byte []) $F{imagen})]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="32">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="32" backcolor="#000000"/>
+				<textField pattern="dd/MM/yyyy h.mm a">
+					<reportElement x="581" y="0" width="96" height="20" forecolor="#FFFFFF"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="677" y="0" width="80" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right" lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement x="757" y="0" width="40" height="20" forecolor="#FFFFFF"/>
+					<textElement lineSpacing="Single"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Title" x="0" y="0" width="376" height="23"/>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font size="20" isBold="true"/>
+					</textElement>
+					<text><![CDATA[KORYSHINE FITNESS CLUB]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageFooter>
+</jasperReport>

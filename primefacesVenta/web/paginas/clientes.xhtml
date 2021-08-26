@@ -1,0 +1,291 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">   
+    
+<h:head>
+    <!--<link href="../resources/css/estilos1.css" rel="stylesheet" type="text/css"></link>-->    
+    <h:outputStylesheet name="css/estilos1.css" />
+</h:head>
+ 
+
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">         
+            <ui:define name="content">    
+                <br/>
+                <p:growl id="msj" autoUpdate="false" life="600" showDetail="true" />
+                <p:fieldset id="contenido">
+                    <div id="clientes1" align="center">
+                        <h:form id="formClientes" style="width: 1400px" enctype="multipart/form-data" rendered="#{indexBean.verificarPermisos(1,3,1)}">
+
+                            <p:fieldset legend="Clientes" >
+                                <h:panelGrid id="clienteDatos" border="0"  columns="3" style="width: 500px">
+                                    <h:panelGrid border="0" columns="2">
+
+                                        <p:outputLabel for="txtName" value="Nombres"/>
+                                        <p:inputText id="txtName" placeholder="Nombres" value="#{clientesBean.clientes.nombre}" required="#{param['consultar'] == null}" requiredMessage="El campo no puede estar vacio" maxlength="140"/>
+
+                                        <p:outputLabel for="txtApellido" value="Apellidos"/>
+                                        <p:inputText id="txtApellido" placeholder="Apellidos" value="#{clientesBean.clientes.apellido}" required="#{param['consultar'] == null}" requiredMessage="El campo no puede estar vacio" maxlength="140"/>                             
+
+                                        <p:outputLabel for="txtFechaNac" value="Fecha nacimiento:" />
+                                        <p:calendar id="txtFechaNac" value="#{clientesBean.clientes.fechaNac}" 
+                                                    navigator="true" 
+                                                    pattern="dd-MM-yyyy" mask="true" locale="es" >
+                                            <p:ajax event="dateSelect" listener="#{clientesBean.onDateSelect}" update="txtEdad"/>                                         
+                                        </p:calendar>    
+
+                                        <p:outputLabel  value="Edad"/>
+                                        <p:outputLabel id="txtEdad"  value="#{clientesBean.age}" />                             
+
+                                        <p:outputLabel  value="Activar/desactivar clientes"/>
+                                        <p:selectOneMenu id="option" value="#{clientesBean.estado}"> 
+                                            <!--0 mora, 1 activo, 2 desactivado-->
+                                            <f:selectItem itemLabel="Activar" itemValue="1"/>
+                                            <f:selectItem itemLabel="Desactivar" itemValue="2"/> 
+                                            <f:selectItem itemLabel="Mora" itemValue="0"/>
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel for="txtTelefono" value="Telefonos"/>                                        
+                                        <p:inputMask id="txtTelefono" placeholder="Telefonos"  value="#{clientesBean.clientes.telefono}" mask="9999-9999"/>
+
+                                        <p:outputLabel for="txtCorreo" value="Correo"/>
+                                        <p:inputText id="txtCorreo" placeholder="Correo" value="#{clientesBean.clientes.correo}" >                                            
+                                        </p:inputText>
+
+                                        <p:outputLabel for="txtDui" value="DUI"/>                                         
+                                        <p:inputMask id="txtDui" mask="999999999"  
+                                                     maxlength="9" 
+                                                     value="#{clientesBean.clientes.dui}">  
+                                        </p:inputMask>                                          
+
+                                        <p:outputLabel for="txtNota" value="Comentarios"/>                                
+                                        <p:inputTextarea id="txtNota" rows="6" cols="33" placeholder="Comentarios o notas sobre el cliente" value="#{clientesBean.clientes.nota}" maxlength="140"/>
+
+                                    </h:panelGrid>  
+
+                                    <h:panelGrid id="contenedor" border="0" columns="1" style="text-align: center">                                   
+                                        <p:outputLabel value="FOTOGRAFIA DE CLIENTE"/>
+                                        <p:graphicImage id="imagen" value="#{images.image}" style="max-width: 200px;" rendered="#{clientesBean.visibleImagen >0}" cache="false">                                   
+                                            <f:param name="id" value="#{clientesBean.idImagen}" />
+                                        </p:graphicImage>    
+
+                                        <p:graphicImage id="imagen2" value="#{images.image}" style="max-width: 200px;" rendered="#{clientesBean.visibleImagen ==0}" cache="false">                                   
+                                            <f:param name="id" value="#{clientesBean.idImagen}" />
+                                        </p:graphicImage>  
+                                        <p:fileUpload mode="advanced"                                                     
+                                                      multiple="false"                                                  
+                                                      sizeLimit="102400" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                      invalidSizeMessage="Maximum file size allowed is 100 KB"
+                                                      label="Buscar foto" skinSimple="true"  previewWidth="80"
+                                                      uploadLabel="Subir la foto" cancelLabel="Cancelar"
+                                                      fileUploadListener="#{clientesBean.fileUploadListener}"
+                                                      invalidFileMessage="only gif | jpg | jpeg | png is allowed"   
+                                                      update="msj imagen"
+                                                      />
+                                        <p:outputLabel style="font-size: 12px;" value="(se debe dar clic en subir foto para guardar la imagen)" />
+                                    </h:panelGrid>   
+                                </h:panelGrid>
+
+                                <br></br>
+                                <p:commandButton id="save" update="formClientes" actionListener="#{clientesBean.guardarCliente()}" 
+                                                 icon="ui-icon-plus" value="#{clientesBean.texto}" 
+                                                 rendered="#{indexBean.verificarPermisos(1,0,1)}"
+                                                 >
+                                    <p:confirm header="Desea modificar al cliente?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>
+                                </p:commandButton>                               
+
+                                <p:commandButton id="new" update="formClientes" actionListener="#{clientesBean.nuevo()}" 
+                                                 action="clientes?faces-redirect=true"
+                                                 icon="ui-icon-disk" value="Nuevo" ajax="false" >   
+                                    <f:param name="consultar" value="true"/>  
+                                </p:commandButton>
+                                
+                                <h:commandLink id="repoteLink" actionListener="#{reportes.verReporte(clientesBean.clientes.idcliente)}"                                                
+                                               target="_blank" disabled="#{clientesBean.botonNuevo==1}" rendered="#{indexBean.verificarPermisos(1,4,1)}">
+                                     <p:commandButton id="repoteLink2" value="Reporte" icon="ui-icon-print" 
+                                                      
+                                                      rendered="#{indexBean.verificarPermisos(1,4,1)}"
+                                                      disabled="#{clientesBean.botonNuevo==1}"/>
+                                    <f:param name="consultar" value="true"/> 
+                                </h:commandLink>    
+                                 <p:tooltip for="repoteLink" value="Debe selecionar un cliente primero" position="right"/>
+                            </p:fieldset>
+
+                            <br/>  
+
+                            <p:commandButton id="btnConsultar"  value="Consultar todos" actionListener="#{clientesBean.listarClientes(1)}" 
+                                             icon="ui-icon-search"
+                                             update="detalleClientes" ajax="false"  
+                                             rendered="#{indexBean.verificarPermisos(1,3,1)}"
+                                             >
+                                <f:param name="consultar" value="true"/>                              
+                            </p:commandButton>
+
+                            <p:commandButton id="btnConsultar1"  value="Clientes mora" actionListener="#{clientesBean.listarClientes(2)}" 
+                                             icon="ui-icon-search"
+                                             update="detalleClientes" ajax="false"  
+                                             rendered="#{indexBean.verificarPermisos(1,3,1)}"
+                                             >
+                                <f:param name="consultar" value="true"/>                              
+                            </p:commandButton>
+
+                            <p:commandButton id="btnConsultar2"  value="Clientes desactivados" actionListener="#{clientesBean.listarClientes(3)}" 
+                                             icon="ui-icon-search"
+                                             update="detalleClientes" ajax="false"  
+                                             rendered="#{indexBean.verificarPermisos(1,3,1)}"
+                                             >
+                                <f:param name="consultar" value="true"/>                              
+                            </p:commandButton>
+
+                            <p:blockUI block="contenido" trigger="det save btnConsultar"  >
+                                <p:graphicImage value="../resources/img/load3.gif"/>
+                            </p:blockUI>
+                            <br/>
+                            <br/>
+                            <p:dataTable id="det" value="#{clientesBean.clientesLista}"                                       
+                                         var="det"
+                                         rows="5"
+                                         reflow="true"
+                                         paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                         rowsPerPageTemplate="5,10,15"
+                                         >
+                                <f:facet name="header">
+                                    <div align="left">
+                                        <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator"/>
+                                        <p:columnToggler datasource="det" trigger="toggler">
+                                             <p:ajax event="toggle" listener="#{clientesBean.onToggle}"/>
+                                        </p:columnToggler>
+                                    </div>
+                                    Lista de clientes 
+                                    <p:outputLabel style="font-size: 12px;" value="(para realizar busquedas mediante el filtro de activo escribir 1 para activo 0 para mora)" />                                          
+                                </f:facet>
+
+                                <p:column headerText="Nombre" filterBy="#{det.nombreCompleto}" filterMatchMode="contains"
+                                          visible="#{clientesBean.list[0]}">
+                                    <p:outputLabel value="#{det.nombreCompleto}"></p:outputLabel>
+                                </p:column>   
+
+                                <p:column headerText="Edad" sortBy="#{det.fecha2}" visible="#{clientesBean.list[1]}" >
+                                    <!--<p:outputLabel value="# {clientesBean.edadYYYYmmdd(det.fechaNac)}"></p:outputLabel> -->
+                                    <p:outputLabel value="#{det.fecha2}"></p:outputLabel> 
+                                </p:column> 
+
+                                <p:column headerText="Vigencia" filterBy="#{det.estado}" visible="#{clientesBean.list[2]}">
+                                    <p:outputLabel value="#{clientesBean.estadoCliente(det.estado)}"></p:outputLabel>                            
+                                </p:column>   
+
+                                <p:column headerText="Fotografia" visible="#{clientesBean.list[3]}">
+                                    <p:graphicImage id="detalleClientes2" value="#{images.obtenerImagen()}" style="max-width: 150px;" cache="false">
+                                        <f:param name="id2" value="#{det.imagen}" />
+                                    </p:graphicImage>  
+                                </p:column>
+
+                                <p:column headerText="Telefono" filterBy="#{det.telefono}" visible="#{clientesBean.list[4]}">
+                                    <p:outputLabel value="#{det.telefono}"></p:outputLabel>                            
+                                </p:column> 
+
+                                <p:column headerText="Correo" filterBy="#{det.correo}" visible="#{clientesBean.list[5]}">
+                                    <p:outputLabel value="#{det.correo}" ></p:outputLabel>                            
+                                </p:column> 
+
+                                <p:column headerText="Dui" filterBy="#{det.dui}" filterMatchMode="contains" visible="#{clientesBean.list[6]}">
+                                    <p:outputLabel value="#{det.dui}"></p:outputLabel>                            
+                                </p:column> 
+
+                                <p:column headerText="Comentarios" filterBy="#{det.nota}" visible="#{clientesBean.list[7]}">
+                                    <p:outputLabel value="#{det.nota}"/>                                                                       
+                                </p:column> 
+
+                                <!--MODIFICAR DATOS-->
+                                <p:column headerText="Modificar /Eliminar" visible="#{clientesBean.list[8]}">
+                                    <!--Haciendo uso de var persona en el actionlistener como parametro de la fila leerID-->
+                                    <!--oncomplete abre el dialogo los : del update se usa para decirle que se encuentra fuera del form :-->                                    
+                                    <p:commandButton id="linkMod" value="Revisar"
+                                                     icon="ui-icon-search" 
+                                                     style="width: 140px; height: 40px"
+                                                     actionListener="#{clientesBean.leerDatosCliente(det)}" 
+                                                     update="imagen2 repoteLink repoteLink2" ajax="false" 
+                                                      disabled="#{(det.nombre.trim().equals('CLIENTE-GENERICO'))}"  
+                                                     rendered="#{indexBean.verificarPermisos(1,1,1)}">
+                                        <f:param name="consultar" value="true"/>                                      
+                                    </p:commandButton>                                    
+                                    <p:commandButton id="linkDel" value="   Eliminar"  actionListener="#{clientesBean.borrarDatosCliente(det)}" 
+                                                     style="width: 140px; height: 40px"
+                                                     icon="ui-icon-trash"
+                                                     disabled="#{(det.nombre.trim().equals('CLIENTE-GENERICO'))}"  
+                                                   rendered="#{indexBean.verificarPermisos(1,2,1)}"
+                                                   update="formClientes"
+                                                   action="clientes?faces-redirect=true">
+                                        
+                                         <f:param name="consultar" value="true"/>   
+                                        <p:confirm header="Desea eliminar al cliente?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>                                    
+                                    </p:commandButton>                                    
+                                </p:column>
+
+                                <f:facet name="footer">                                  
+                                    Total de clientes activos #{clientesBean.clientesLista.size()}, en mora #{clientesBean.contar.campo0}, vigentes #{clientesBean.contar.campo1}, desactivados #{clientesBean.contar.campo2}                                       
+
+                                </f:facet>
+                            </p:dataTable>
+
+                            <div class="card"> 
+                                <p:growl id="message" showDetail="true"/>                        
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                                    <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                                    <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
+                                </p:confirmDialog>   
+                            </div>
+
+                        </h:form>
+
+                        <!-- <p:fieldset legend="Consultar clientes" collapsed="true" toggleable="true">-->
+                        <br/>
+
+                    </div>
+                </p:fieldset> 
+                <!--   </p:fieldset>-->
+
+                <br/>   <br/>   <br/>
+                <script type="text/javascript">
+                    PrimeFaces.locales['es'] = {
+                        closeText: 'Cerrar',
+                        prevText: 'Anterior',
+                        nextText: 'Siguiente',
+                        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                        dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+                        weekHeader: 'Semana',
+                        firstDay: 1,
+                        isRTL: false,
+                        showMonthAfterYear: false,
+                        yearSuffix: '',
+                        timeOnlyTitle: 'Sólo hora',
+                        timeText: 'Tiempo',
+                        hourText: 'Hora',
+                        minuteText: 'Minuto',
+                        secondText: 'Segundo',
+                        currentText: 'Fecha actual',
+                        ampm: false,
+                        month: 'Mes',
+                        week: 'Semana',
+                        day: 'Día',
+                        allDayText: 'Todo el día',
+                        today: 'Hoy',
+                        clear: 'Claro'
+                    };
+                </script>
+
+            </ui:define>
+
+
+        </ui:composition>
+
+  
+</html>

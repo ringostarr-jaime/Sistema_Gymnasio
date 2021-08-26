@@ -1,0 +1,51 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 28-jun-2021, 11:09:15
+    Author     : Jymmy
+*/
+
+#cuerpo {
+    height: 850px;
+    /*background-color: #C60;*/
+}
+
+
+@page {
+   /* size: auto;  */
+    margin: 0;  
+    margin-left: 25px;  
+    margin-right: 50px;  
+    margin-top: 25px;  
+}
+
+/*
+body{
+    padding-left: 1.3cm;
+    padding-right: 1.3cm;
+    padding-top: 1.1cm;
+}*/
+
+
+
+
+/*#fondo {
+  background-image: url("../img/gym2.jpg"); 
+   height: 500px;  You must set a specified height 
+  background-position: center;  Center the image 
+  background-repeat: no-repeat;  Do not repeat the image 
+  background-size: cover;  Resize the background image to cover the entire container 
+  background-color: #282828;
+}*/
+
+#fondo2 {
+    background-image: url("../img/gym6.jpg"); 
+    background-position: center;
+    background-size: 100% 100%;
+    /*background-size: cover; /* Resize the background image to cover the entire container */
+    background-color: #282828;
+}
+

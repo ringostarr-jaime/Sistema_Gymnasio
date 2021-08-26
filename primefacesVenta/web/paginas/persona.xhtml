@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">
+
+            <ui:define name="content">
+
+                <!--LISTAR DATOS -->
+                <f:event type="preRenderView" listener="#{personaBean.listar('f')}"></f:event>                
+                <p:growl id="msj" showDetail="true" />
+                <h:form id="fm">         
+
+
+                    <!--INSERTAR DATOS-->
+                    <!--update=":msj"-->
+                    <p:commandButton value="Nuevo" oncomplete="PF('wdlgDatos').show();" actionListener="#{personaBean.setAccion('Registrar')}" update="dlgDatos"/>
+
+                    <!--Haciendo uso de la var para capturar la fila-->
+                    <p:dataTable id="data" value="#{personaBean.listPersonas}" var="personadato"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15">
+                        <p:column headerText="ID"><p:outputLabel value="#{personadato.codigo}"></p:outputLabel></p:column>
+
+                        <p:column headerText="Nombre">
+                            <p:outputLabel value="#{personadato.nombre}"></p:outputLabel>
+                        </p:column>
+
+                        <p:column headerText="Sexo">                   
+                            <p:outputLabel value="#{personadato.sexo}"> <f:converter converterId="sexoConverter" /></p:outputLabel>                  
+                        </p:column>  
+
+                        <!--MODIFICAR DATOS-->
+                        <p:column headerText="Modificar">
+                            <!--Haciendo uso de var persona en el actionlistener como parametro de la fila leerID-->
+                            <!--oncomplete abre el dialogo los : del update se usa para decirle que se encuentra fuera del form :-->
+                            <p:commandLink value="Modificar"  actionListener="#{personaBean.leerID(personadato)}" oncomplete="PF('wdlgDatos').show();" update=":dlgDatos"></p:commandLink>
+                        </p:column>
+
+                        <!--ELIMINAR DATOS-->
+                        <!--<p:column headerText="Eliminar">                  
+                            <p:commandLink value="Eliminar"    oncomplete="PF('wdlgEliminar').show();"  action="persona?faces-redirect=true">               
+                            </p:commandLink>
+                        </p:column>-->
+                        <p:column headerText="Eliminar">   
+                            <p:commandLink value="Eliminar" actionListener="#{personaBean.eliminar(personadato)}" action="persona?faces-redirect=true">
+                                <p:confirm header="Eliminar" message="Esta seguro de realizar la accion" icon="ui-icon-alert"></p:confirm>
+                            </p:commandLink>
+
+
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"></p:commandButton>
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-check"></p:commandButton>
+                            </p:confirmDialog>
+                        </p:column>
+                    </p:dataTable>
+                    TESTTT
+                    <p:graphicImage value="resources/img/1.jpg" width="300" />  
+                </h:form>
+
+
+                <!--el widgetbar nos va a servir para mostrar o cultar el dialogo-->
+                <p:dialog header="Datos" widgetVar="wdlgDatos" id="dlgDatos" showEffect="explode" hideEffect="explode">
+                    <!--Aca va todo lo que queremos mostrar en el dialogo-->
+                    <div style="width: 900px;" align="center">
+                    <h:form>
+                        <p:outputLabel value="Nombre "/>       
+                        <!--Para validar que el campo sea requerido required="true"-->
+                        <p:inputText value="#{personaBean.persona.nombre}" />
+                        <br></br>
+                        <p:outputLabel value="Sexo "/>
+                        <p:selectOneMenu value="#{personaBean.persona.sexo}">
+                            <f:selectItem itemLabel="Masculino" itemValue="M"/>
+                            <f:selectItem itemLabel="Femenino" itemValue="F"/>
+                        </p:selectOneMenu>
+                        <br></br>
+                        <!--Ocultar dialogo oncomplete="PF('wdlgDatos').hide();    abrir oncomplete="PF('wdlgDatos').show();""-->
+                        <p:commandButton value="#{personaBean.accion}" actionListener="#{personaBean.operar()}" oncomplete="PF('wdlgDatos').hide();" update=":fm:data"/>             
+                        <p:commandButton value="Cancelar"  immediate="true" oncomplete="PF('wdlgDatos').hide();"/>            
+                    </h:form>     
+                        </div>
+                </p:dialog> 
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

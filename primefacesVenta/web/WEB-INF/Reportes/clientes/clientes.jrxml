@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="1008" pageHeight="612" orientation="Landscape" columnWidth="968" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ad7b5514-9687-499f-b0c6-6e1849b88df0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="587"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CONTEXT" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT idclientes,CONCAT(nombres,' ',apellidos) nombre,telefono, fechaNacimiento,correo, estado, nota, dui,imagen 
+FROM ventas.clientes left join ventas.imagenes on id=idclientes
+where idclientes=12]]>
+	</queryString>
+	<field name="idclientes" class="java.lang.Integer">
+		<fieldDescription><![CDATA[El idclientes se cruza con el campo id de la tabla imagenes para sacar la imagen blob]]></fieldDescription>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="telefono" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechaNacimiento" class="java.sql.Date">
+		<fieldDescription><![CDATA[la edad se muestra en java en base a restar el year actual con la fecha de nacimiento y si el mes es mayor al actual se resta 1]]></fieldDescription>
+	</field>
+	<field name="correo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="estado" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ESTADOS = 1 activo, 0 mora, 2 desactivado]]></fieldDescription>
+	</field>
+	<field name="nota" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dui" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="imagen" class="java.lang.Object">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="ContarClientes" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{idclientes}]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="1" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="322" y="0" width="283" height="20" uuid="5b2a96b3-69a8-4f36-b196-cd434c367cb5"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE CLIENTES]]></text>
+			</staticText>
+			<image>
+				<reportElement x="866" y="0" width="102" height="35" uuid="068da42f-3561-4c6c-a46d-986db505f1a3"/>
+				<imageExpression><![CDATA["/"+$P{CONTEXT}.toString()+"/resources/img/healthy.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="12" width="58" height="20" uuid="e26a11db-5b90-494c-893a-a0162a992e9d"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codigo ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="12" width="152" height="20" uuid="2482a303-f948-4cb5-88ca-987e808d8723"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="12" width="100" height="20" uuid="cdacee66-f9a4-441f-8d57-4e9464083561"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dui]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="12" width="72" height="20" uuid="c31ca030-dfa2-41a1-ac10-21899d663e1d"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="471" y="12" width="100" height="20" uuid="d86fff1b-b287-434b-bf82-b25374ca7ad5"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="382" y="12" width="100" height="20" uuid="379f9c97-1141-400e-849e-9291cb67fa0b"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Nacimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="560" y="12" width="127" height="20" uuid="2529b993-d3d4-4abe-b413-6b8cbdccd5c2"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Correo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="687" y="12" width="134" height="20" uuid="15af92af-e41d-480e-ad44-18ec473f610d"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nota o Comentario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="821" y="12" width="100" height="20" uuid="87a0a3e9-614d-46b4-9de3-8c977a944ac7"/>
+				<text><![CDATA[imagen]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="53" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="58" height="20" uuid="a09d70f4-e6a4-47a1-ad30-a85e0e8126c9"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{idclientes}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="58" y="0" width="152" height="20" uuid="8122183a-d239-425a-8632-54c2480a62e4"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="210" y="0" width="100" height="20" uuid="00078a1a-953b-428d-897d-96798ce1e065"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{dui}==null?"000000000":$F{dui}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="0" width="72" height="20" uuid="c848957f-0146-426a-af71-8c071fc6b1d8"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{estado}==1?"VIGENTE":$F{estado}==2?"DESACTIVADO":"MORA"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="471" y="0" width="100" height="20" uuid="d6381785-3fb7-4af3-8051-3bfc8b398f15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
+				<reportElement x="382" y="0" width="100" height="20" uuid="e81ee8b1-14e5-48b2-95b9-96c8ad53d726"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{fechaNacimiento}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="560" y="0" width="127" height="20" uuid="46b26bed-8b57-4745-afe1-f65b09e69f51"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{correo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="687" y="0" width="134" height="20" uuid="abb0d96e-c943-4837-b471-9a950457e850"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{nota}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="821" y="3" width="100" height="50" uuid="6092fe76-025d-4898-8e9a-a67922f823e1"/>
+				<imageExpression><![CDATA[net.sf.jasperreports.engine.util.JRImageLoader.loadImage ((byte []) $F{imagen})]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="32" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="752" y="12" width="96" height="20" uuid="02238a9a-092f-436c-97ab-e5dd2f82bee2"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="848" y="12" width="80" height="20" uuid="71569dcd-c5f6-47e9-9721-c2e07ab78dbd"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="928" y="12" width="40" height="20" uuid="4f7fcd7b-dbf6-4fe2-9bc0-8f7087e3b6c3"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="356" y="22" width="139" height="20" uuid="694af3bb-6017-4c3a-9a4d-07cfbc4d31c1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE CLIENTES ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="471" y="22" width="100" height="20" uuid="c769b0e2-a7e0-4d6f-ba7e-59594d3b6d32"/>
+				<textFieldExpression><![CDATA[$V{ContarClientes}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

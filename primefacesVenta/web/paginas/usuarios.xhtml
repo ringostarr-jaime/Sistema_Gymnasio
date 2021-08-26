@@ -1,0 +1,365 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">
+
+            <ui:define name="content">
+                <br/>
+                <!--LISTAR DATOS -->
+                <f:event type="preRenderView" listener="#{usuariosBean.listar('f')}"></f:event>                
+                <f:event type="preRenderView" listener="#{usuariosBean.listarRol('f',0)}"></f:event>  
+                <f:event type="preRenderView" listener="#{usuariosBean.listarRolPermiso('f', 0,0)}"></f:event>  
+                <f:event type="preRenderView" listener="#{usuariosBean.idUsuario()}"></f:event>  
+                <p:growl id="msj" showDetail="true" life="600" />
+                <div align="center">
+
+
+                    <p:fieldset legend="Usuarios" id="contenido" style="width: 1300px;" rendered="#{indexBean.verificarPermisos(5,23,1)}">    
+
+                        <h:form id="fm">  
+                            <!--INSERTAR DATOS-->
+                            <!--update=":msj"-->            
+                            <div align="left">
+                                <p:commandButton value="Nuevo usuario" oncomplete="PF('wdlgDatos').show();"
+                                                 icon="ui-icon-plus"    
+                                                 rendered="#{indexBean.verificarPermisos(5,20,1)}"
+                                                 actionListener="#{usuariosBean.setAccion('Registrar')}" update="dlgDatos"/>
+                            </div>
+                            <!--Haciendo uso de la var para capturar la fila-->
+                            <p:dataTable id="data" 
+                                         value="#{usuariosBean.listarUsuarios}" 
+                                         var="usu" 
+                                         style="text-align: left;" 
+                                         resizeMode="expand"
+                                         resizableColumns="true"
+                                         paginator="true"
+                                         rows="10"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} usuarios"
+                                         rowsPerPageTemplate="5,10,15">
+                                <f:facet name="header">
+                                    <div align="left">
+                                        <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator"/>
+                                        <p:columnToggler datasource="data" trigger="toggler" />
+                                    </div>
+                                    Lista de usuarios
+                                    <p:outputLabel style="font-size: 12px;" value="(para realizar busquedas mediante el filtro de activo escribir 1 para activos y 0 para desactivados)"/>     
+                                    <br/>
+                                    <p:outputLabel style="font-size: 12px;" value="(Si realizas una modificacion de usuario debes modificar la clave)" /> 
+                                </f:facet>
+                                <p:column headerText="Usuario" filterBy="#{usu.usuario}">
+                                    <p:outputLabel value="#{usu.usuario}" style="font-size: 14px" ></p:outputLabel>
+                                </p:column>
+
+                                <p:column headerText="Nombre" filterBy="#{usu.nombre}" filterMatchMode="contains" colspan="2">                   
+                                    <p:outputLabel value="#{usu.nombre}" style="font-size: 14px"></p:outputLabel>                  
+                                </p:column>
+
+                                <!--<p:column headerText="Clave">                   
+                                    <p:outputLabel value="# {usu.clave}"></p:outputLabel>                  
+                                </p:column>-->  
+
+                                <p:column headerText="Correo" filterBy="#{usu.correo}" filterMatchMode="contains" colspan="2" >                   
+                                    <p:outputLabel value="#{usu.correo}" style="font-size: 14px"></p:outputLabel>                  
+                                </p:column>  
+
+                                <p:column headerText="Telefono" filterBy="#{usu.telefono}" >                   
+                                    <p:outputLabel value="#{usu.telefono}"></p:outputLabel>                  
+                                </p:column>  
+
+                                <p:column headerText="Rol">                   
+                                    <p:outputLabel value="#{usu.rolNombre}"></p:outputLabel>                  
+                                </p:column> 
+
+                                <p:column headerText="Estado" filterBy="#{usu.estado}">                   
+                                    <p:outputLabel value="#{(usu.estado==1?'Activo':'Desactivado')}"></p:outputLabel>                  
+                                </p:column> 
+
+                                <!--MODIFICAR DATOS-->
+                                <p:column headerText="Opcion" colspan="2">                                    
+                                    <p:commandButton value="Modificar"  actionListener="#{usuariosBean.leerID(usu)}"  
+                                                     disabled="#{!indexBean.verificarPermisos(5,21,1)}"
+                                                     icon="ui-icon-pencil" rendered="#{!((usu.usuario.trim().equals('admin'))and((usu.nombre.trim().equals('ADMINISTRADOR'))) )}"
+                                                     oncomplete="PF('wdlgDatos').show();" update=":dlgDatos">
+                                        <p:ajax  listener="#{usuariosBean.setAccion('Modificar')}" />
+                                    </p:commandButton>
+
+                                    <p:commandButton value="Eliminar" actionListener="#{usuariosBean.eliminarUsuario(usu)}" 
+                                                     disabled="#{!indexBean.verificarPermisos(5,22,1)}"
+                                                     rendered="#{!((usu.usuario.trim().equals('admin'))and((usu.nombre.trim().equals('ADMINISTRADOR'))) )}"
+                                                     icon="ui-icon-trash"                                                     
+                                                     action="usuarios?faces-redirect=true">
+                                        <p:confirm header="Eliminacion de USUARIO" message="Esta seguro de eliminar este USUARIO" icon="ui-icon-alert"></p:confirm>
+                                    </p:commandButton>
+
+                                </p:column>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"></p:commandButton>
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-check"></p:commandButton>
+                                </p:confirmDialog>
+                            </p:dataTable>
+
+                        </h:form>
+
+
+                        <!--el widgetbar nos va a servir para mostrar o cultar el dialogo-->
+                        <p:dialog style="width: 1200px;" header="Ingresar usuario" widgetVar="wdlgDatos" id="dlgDatos" showEffect="explode" hideEffect="explode">
+                            <!--Aca va todo lo que queremos mostrar en el dialogo-->
+                            <div   align="center">
+                                <h:form id="fmUsuarios">
+                                    <h:panelGrid columns="2" border="0">
+                                        <p:outputLabel value="Nombre"/>   
+                                        <p:inputText value="#{usuariosBean.usuarios.nombre}" maxlength="149" required="true"/>
+
+                                        <p:outputLabel value="Usuario"/>
+                                        <p:inputText value="#{usuariosBean.usuarios.usuario}" maxlength="44" required="true"/>
+
+                                        <p:outputLabel value="Clave"/>
+                                        <p:password id="pwd1" value="#{usuariosBean.usuarios.clave}" feedback="true"
+                                                    maxlength="44"
+                                                    promptLabel="Ingresa tu contraseña" weakLabel="Débil"
+                                                    goodLabel="Buena" strongLabel="Fuerte" validatorMessage="las claves deben coincidir"
+                                                    match="pwd2" label="Password 1" required="true"/>
+
+                                        <p:outputLabel value="Confirmar clave"/>
+                                        <p:password id="pwd2" value="#{usuariosBean.usuarios.clave}" feedback="true"
+                                                    maxlength="44" 
+                                                    promptLabel="Ingresa tu contraseña" weakLabel="Débil"
+                                                    goodLabel="Buena" strongLabel="Fuerte" validatorMessage="las claves deben coincidir"
+                                                    label="Password 2" required="true"/> 
+
+                                        <p:outputLabel value="Correo"/>
+                                        <p:inputText value="#{usuariosBean.usuarios.correo}" maxlength="149" />
+
+                                        <p:outputLabel value="Telefono"/>
+                                        <p:inputText value="#{usuariosBean.usuarios.telefono}" maxlength="44" />
+
+                                        <p:outputLabel value="Rol"/>
+                                        <p:selectOneMenu id="optionRol" value="#{usuariosBean.usuarios.rol}">                                          
+                                            <f:selectItems  value="#{usuariosBean.listarRoles}" var="roles"
+                                                            itemLabel="#{roles.nombre}" itemValue="#{roles.idrol}"/>
+                                        </p:selectOneMenu>  
+
+                                        <p:outputLabel  value="Estado"/>
+                                        <p:selectOneMenu id="option" value="#{usuariosBean.usuarios.estado}"> 
+                                            <!-- 1 activo, 0 desactivado-->
+                                            <f:selectItem itemLabel="Activar" itemValue="1"/>
+                                            <f:selectItem itemLabel="Desactivar" itemValue="0"/>                                      
+                                        </p:selectOneMenu>                                      
+
+                                        <p:commandButton value="#{usuariosBean.accion}" actionListener="#{usuariosBean.registrarUsuarios()}" 
+                                                         icon="ui-icon-disk" id="modificar"
+                                                         oncomplete="PF('wdlgDatos').hide();" update=":fm:data fmUsuarios">             
+                                            <p:confirm header="Desea registrar al usuario?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>                                    
+                                        </p:commandButton>
+                                        <p:commandButton value="Cancelar"  immediate="true"
+                                                         icon="ui-icon-close"
+                                                         oncomplete="PF('wdlgDatos').hide();"/>            
+                                    </h:panelGrid>
+                                    <!--BLOCK-->
+                                    <p:blockUI block="fm" trigger=":fmUsuarios:modificar"  >
+                                        <p:graphicImage value="../resources/img/load3.gif"/>
+                                    </p:blockUI>  
+                                    <!--BLOCK-->
+                                    <div class="card"> 
+                                        <p:growl id="message" showDetail="true"/>                        
+                                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                                            <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                                            <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
+                                        </p:confirmDialog>   
+                                    </div>
+                                </h:form>     
+                            </div>
+                        </p:dialog>
+                    </p:fieldset>
+
+                    <br/>
+
+                    <p:fieldset legend="Roles" id="contenido2" style="width: 1300px;" rendered="#{indexBean.verificarPermisos(5,23,1)}">    
+
+                        <h:form id="fm2">  
+                            <!--INSERTAR DATOS-->
+                            <!--update=":msj"-->            
+                            <div align="left">
+                                <p:commandButton value="Nuevo rol" oncomplete="PF('wdlgDatos2').show();"
+                                                 icon="ui-icon-plus" rendered="#{indexBean.verificarPermisos(5,20,1)}"                                   
+                                                 actionListener="#{usuariosBean.setAccion('Registrar')}" update="dlgDatos2"/>
+                            </div>
+                            <!--Haciendo uso de la var para capturar la fila-->
+                            <p:dataTable id="data2" 
+                                         value="#{usuariosBean.listarRoles}" 
+                                         var="rol" 
+                                         style="text-align: left;" 
+                                         resizeMode="expand"
+                                         resizableColumns="true"
+                                         paginator="true"
+                                         rows="10"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} usuarios"
+                                         rowsPerPageTemplate="5,10,15">
+                                <f:facet name="header">
+                                    <div align="left">
+                                        <p:commandButton id="toggler" type="button" value="Columnas" icon="ui-icon-calculator"/>
+                                        <p:columnToggler datasource="data2" trigger="toggler" />
+                                    </div>
+                                    Lista de roles
+                                    <p:outputLabel style="font-size: 12px;" value="(para realizar busquedas mediante el filtro de activo escribir 1 para activos y 0 para desactivados)"/>     
+                                    <br/>                                   
+                                </f:facet>
+                                <p:column headerText="Id" filterBy="#{rol.idrol}">
+                                    <p:outputLabel value="#{rol.idrol}" style="font-size: 14px" ></p:outputLabel>
+                                </p:column>
+
+                                <p:column headerText="Nombre" filterBy="#{rol.nombre}" filterMatchMode="contains" colspan="2">                   
+                                    <p:outputLabel value="#{rol.nombre}" style="font-size: 14px"></p:outputLabel>                  
+                                </p:column>
+
+                                <p:column headerText="Descripcion" filterBy="#{rol.descripcion}" filterMatchMode="contains" colspan="2">                   
+                                    <p:outputLabel value="#{rol.descripcion}" style="font-size: 14px"></p:outputLabel>                  
+                                </p:column>
+
+                                <p:column headerText="Estado" filterBy="#{rol.estado}">                   
+                                    <p:outputLabel value="#{(rol.estado==1?'Activo':'Desactivado')}"></p:outputLabel>                  
+                                </p:column> 
+
+                                <!--MODIFICAR DATOS-->
+                                <p:column headerText="Opcion" colspan="2">                                    
+                                    <p:commandButton value="Modificar"  actionListener="#{usuariosBean.leerRol(rol)}"  
+                                                     icon="ui-icon-pencil" disabled="#{!indexBean.verificarPermisos(5,21,1)}"
+                                                     rendered="#{!((rol.idrol==1)and((rol.nombre.trim().equals('admin'))) ) }"
+                                                     oncomplete="PF('wdlgDatos2').show();" update=":dlgDatos2 fmUsuarios2">
+                                        <p:ajax  listener="#{usuariosBean.setAccion('Modificar')}" />
+                                    </p:commandButton>
+
+                                    <p:commandButton value="Eliminar" actionListener="#{usuariosBean.eliminarRol(rol)}" 
+                                                     rendered="#{!((rol.idrol==1)and((rol.nombre.trim().equals('admin'))) )}"
+                                                     icon="ui-icon-trash"     
+                                                     disabled="#{!indexBean.verificarPermisos(5,22,1)}"
+                                                     action="usuarios?faces-redirect=true">
+                                        <p:confirm header="Eliminacion de ROL" message="Esta seguro de eliminar este ROL" icon="ui-icon-alert"></p:confirm>
+                                    </p:commandButton>
+
+                                </p:column>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"></p:commandButton>
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-check"></p:commandButton>
+                                </p:confirmDialog>
+                            </p:dataTable>
+
+                        </h:form>
+
+
+                        <!--el widgetbar nos va a servir para mostrar o cultar el dialogo-->
+                        <p:dialog style="width: 1200px;" header="Ingresar Roles" widgetVar="wdlgDatos2" id="dlgDatos2" showEffect="explode" hideEffect="explode">
+                            <!--Aca va todo lo que queremos mostrar en el dialogo-->
+                            <div   align="center">
+                                <h:form id="fmUsuarios2">
+                                    <h:panelGrid columns="2" border="0">
+
+                                        <p:outputLabel value="Nombre rol"/>
+                                        <p:inputText value="#{usuariosBean.roles.nombre}" style="font-size: 14px" maxlength="44" required="true"/>
+
+
+                                        <p:outputLabel value="Descripcion rol"/>
+                                        <p:inputText value="#{usuariosBean.roles.descripcion}" style="font-size: 14px" maxlength="149" required="true"/>                  
+
+
+                                        <p:outputLabel value="Estado"/>
+                                        <p:selectOneMenu id="option" value="#{usuariosBean.roles.estado}"> 
+                                            <!-- 1 activo, 0 desactivado-->
+                                            <f:selectItem itemLabel="Desactivar" itemValue="0"/>  
+                                            <f:selectItem itemLabel="Activar" itemValue="1"/>                                                                                
+                                        </p:selectOneMenu>  
+
+                                        <p:outputLabel value="Modulo" rendered="#{usuariosBean.accion.equals('Modificar')}"/>
+                                        <p:selectOneMenu id="optionRol" value="#{usuariosBean.roles.idmodulos}" rendered="#{usuariosBean.accion.equals('Modificar')}">  
+                                            <p:ajax update="pickList" listener="#{usuariosBean.listarRolPermiso('v', usuariosBean.roles.idmodulos,usuariosBean.roles.idrol )}"/>
+                                            <f:selectItems  value="#{usuariosBean.listarModulos}" var="modulos" 
+                                                            itemLabel="#{modulos.descripcion}" itemValue="#{modulos.idmodulos}">   
+
+                                            </f:selectItems>                                               
+
+                                        </p:selectOneMenu>  
+
+                                        <div class="card" rendered="#{usuariosBean.accion.equals('Modificar')}">
+                                            <h5 style="margin-top: 0" >Permisos</h5>                                             
+                                            <p:pickList id="pickList" value="#{usuariosBean.rolPermisos}" var="r" 
+                                                        rendered="#{usuariosBean.accion.equals('Modificar')}"
+                                                        itemLabel="#{r.pdescripcion}" itemValue="#{r.idPermisos}"/>
+                                        </div>
+
+                                        <p:outputLabel value="" rendered="#{usuariosBean.accion.equals('Modificar')}"/>
+                                        <p:commandButton value="#{usuariosBean.accion}" actionListener="#{usuariosBean.registrarRoles()}" 
+                                                         icon="ui-icon-disk" id="modificar2"
+                                                         disabled="#{!indexBean.verificarPermisos(5,21,1)}"
+                                                         oncomplete="PF('wdlgDatos2').hide();" update="contenido2 :fm2:data2 fmUsuarios2">             
+                                            <p:confirm header="Desea registrar el rol?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>                                    
+                                        </p:commandButton>
+                                        <p:commandButton value="Cancelar"  immediate="true"
+                                                         icon="ui-icon-close"
+                                                         oncomplete="PF('wdlgDatos2').hide();"/>            
+                                    </h:panelGrid>
+                                    <!--BLOCK-->
+                                    <p:blockUI block="fm2" trigger=":fmUsuarios2:modificar2"  >
+                                        <p:graphicImage value="../resources/img/load3.gif"/>
+                                    </p:blockUI>  
+                                    <!--BLOCK-->
+                                    <div class="card2"> 
+                                        <p:growl id="message2" showDetail="true"/>                        
+                                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                                            <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                                            <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
+                                        </p:confirmDialog>   
+                                    </div>
+                                </h:form>     
+                            </div>
+                        </p:dialog>
+
+                    </p:fieldset>
+                          <br/>
+                  <p:fieldset legend="Opciones" id="contenido3" style="width: 1300px;" >    
+
+                        <h:form id="fm3">  
+                            <p:outputLabel value="Temas: "/>
+                            <p:themeSwitcher id="basic" style="width:165px" value="#{usuariosBean.nombreTema}">                              
+                                <f:selectItems value="#{usuariosBean.themes}" var="theme" itemLabel="#{theme.nombre}"
+                                               itemValue="#{theme.tema}"/>
+                            </p:themeSwitcher>
+                            <br/>
+                             <br/>
+                              <p:commandButton id="guardar3" value="Guardar" icon="ui-icon-disk" 
+                                               actionListener="#{usuariosBean.guardarTema()}"> 
+                                               
+                                  <p:confirm header="Desea guardar la modificacion?" message="Esta seguro de realizar esta accion?" icon="ui-icon-info"/>
+                              </p:commandButton>
+                                
+                             
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"></p:commandButton>
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-check"></p:commandButton>
+                            </p:confirmDialog>
+
+                             <p:blockUI block="contenido"   >
+                                <p:graphicImage value="../resources/img/load3.gif"/>
+                            </p:blockUI>
+                        </h:form>       
+
+                    </p:fieldset>
+                </div>
+               
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">
+
+            <ui:define name="content">
+                <!--LISTAR DATOS-->
+                <f:event type="preRenderView" listener="#{productoBean.listarProductosEstados('f',1,0,0)}"></f:event>  
+                <p:growl id="msj" showDetail="true" />    
+                <br/>
+                <div align="center">
+                    <p:fieldset legend="Productos" id="contenido" style="width: 1200px;">
+                        <h:form id="fm" rendered="#{indexBean.verificarPermisos(2,8,1)}" >                          
+                                                 
+                            <!--INSERTAR DATOS-->
+                            <!--update=":msj"-->
+                            <div align="left">
+                                <p:commandButton icon="ui-icon-plus" value="Nuevo" oncomplete="PF('dialogNuevo').show();" 
+                                                 rendered="#{indexBean.verificarPermisos(2,5,1)}"
+                                                 style="align-content: flex-end"
+                                                 actionListener="#{productoBean.setAccion('Registrar')}" update="fmNuevoProducto"/>
+                            </div>
+                            <div align="center">                              
+                                <p:commandButton icon="ui-icon-search" value="Productos activos"  
+                                                 rendered="#{indexBean.verificarPermisos(2,5,1)}"
+                                                 actionListener="#{productoBean.listarProductosEstados('v', 1,0,0)}" update="data"/>
+                                &nbsp;
+                                <p:commandButton icon="ui-icon-search" value="Productos desactivados" 
+                                                 rendered="#{indexBean.verificarPermisos(2,5,1)}"
+                                                 actionListener="#{productoBean.listarProductosEstados('v',0,0,0)}" update="data"/>
+
+                            </div>  
+                            <br/>
+                            <!--Haciendo uso de la var para capturar la fila-->
+                            <p:dataTable id="data" value="#{productoBean.listProductos}" var="dt"
+                                         style="text-align: center" 
+                                         paginator="true"
+                                         rows="5"
+                                         reflow="true"
+                                         resizableColumns="true"
+                                         resizeMode="expand"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} productos ingresados"
+                                         rowsPerPageTemplate="10,20,30">                       
+
+                                <!--<p:column headerText="Codigo">
+                                    <p:outputLabel value="# {dt.codProducto}"/>
+                                </p:column>-->
+                                <p:column headerText="Producto" filterBy="#{dt.nombreProducto}" filterMatchMode="contains">
+                                    <p:outputLabel value="#{dt.nombreProducto}"/>
+                                </p:column>
+                                <p:column headerText="Precio" sortBy="#{dt.precioVenta}">
+                                    <p:outputLabel value="$ #{dt.precioVenta}"/>
+                                </p:column>
+                                <p:column headerText="Stock minimo" sortBy="#{dt.stockMinimo}">
+                                    <p:outputLabel value="#{dt.stockMinimo}"/>
+                                    Unidades
+                                </p:column>
+                                <p:column headerText="Stock actual" sortBy="#{dt.stockActual}">
+                                    <p:outputLabel value="#{dt.stockActual}"/>
+                                    Unidades
+                                </p:column>
+                                <p:column headerText="Codigo barra" filterBy="#{dt.codBarra}" filterMatchMode="contains">
+                                    <p:outputLabel value="#{dt.codBarra}"/>
+                                </p:column>
+
+                                <p:column headerText="Opciones" colspan="2">
+                                    <!--MODIFICAR DATOS-->                     
+                                    <!--Haciendo uso de var persona en el actionlistener como parametro de la fila leerID-->
+                                    <!--oncomplete abre el dialogo los : del update se usa para decirle que se encuentra fuera del form :-->
+                                    <p:commandButton icon="ui-icon-pencil" value="Editar"  actionListener="#{productoBean.leerID(dt)}" 
+                                                     rendered="#{indexBean.verificarPermisos(2,6,1)}"
+                                                     oncomplete="PF('wdlgDatos').show();" update=":formEditar">                             
+                                    </p:commandButton>                          
+
+                                    <!--ELIMINAR DATOS-->                                    
+                                    <p:commandButton id="delete" icon="ui-icon-trash" value="Eliminar"  actionListener="#{productoBean.eliminar(dt)}"  oncomplete="PF('wdlgEliminar').show();"  action="producto?faces-redirect=true" rendered="#{indexBean.verificarPermisos(2,7,1)}">               
+                                        <p:confirm header="Desea eliminar el producto?" message="Esta seguro de realizar la operacion (Si el producto ya tiene un registro de venta este no se prodra eliminar pero puede ser desactivado en la opcion de modificar)?" icon="ui-icon-info"/>                           
+                                    </p:commandButton>                   
+                                </p:column>
+
+                            </p:dataTable>     
+                            <div class="card"> 
+                                <p:growl id="message" showDetail="true"/>                        
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                                    <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
+                                    <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>                               
+                                </p:confirmDialog>   
+                            </div>
+                        </h:form>
+
+
+                        <!--OTROS PRODUCTOS-->
+
+                        <!--OTROS PRODUCTOS-->
+
+
+                        <h:form id="formEditar">
+                            <!--el widgetbar nos va a servir para mostrar o cultar el dialogo-->                    
+                            <p:dialog id="dlgDatos" widgetVar="wdlgDatos" modal="true" header="Desea modificar el producto?" showEffect="explode" hideEffect="explode">
+                                <!--Aca va todo lo que queremos mostrar en el dialogo-->
+                                <h:panelGrid columns="2" border="0" id="panel2">
+                                    <p:outputLabel value="Otros productos" style="font-weight: bold"/>    
+                                    <p:selectBooleanCheckbox value="#{productoBean.producto.check}"                                                          
+                                                             itemLabel=" Para actividades (spinning, pesas, aerobicos)" style="font-weight: bold">
+                                        <p:ajax update="panel2" listener="#{productoBean.renderPanel(event)}"/>
+                                    </p:selectBooleanCheckbox>
+
+                                    <p:outputLabel value="Nombre" rendered="#{productoBean.ver}"/>  
+                                    <p:outputLabel value="Actividad" rendered="#{!productoBean.ver}"/>  
+                                    <p:inputText value="#{productoBean.producto.nombreProducto}" maxlength="74" required="true" requiredMessage="El nombre es requerido"/>
+                                    <p:outputLabel value="Precio"/>    
+                                    <p:inputText value="#{productoBean.producto.precioVenta}" maxlength="10" required="true" requiredMessage="El precio es requerido"/>
+
+                                    <p:outputLabel value="Stock minimo" rendered="#{productoBean.ver}"/>  
+                                    <p:outputLabel value="Boleta minima" rendered="#{!productoBean.ver}"/>  
+                                    <p:inputText value="#{productoBean.producto.stockMinimo}" maxlength="9" required="true" requiredMessage="El stock minimo es requerido"/>
+
+                                    <p:outputLabel value="Stock actual" rendered="#{productoBean.ver}"/> 
+                                    <p:outputLabel value="Boleta actual" rendered="#{!productoBean.ver}"/> 
+                                    <p:inputText value="#{productoBean.producto.stockActual}" maxlength="9" required="true" requiredMessage="El stock actual es requerido"/>
+
+                                    <p:outputLabel value="Codigo de barra" rendered="#{productoBean.ver}"/> 
+                                    <p:outputLabel value="Codigo actividad" rendered="#{!productoBean.ver}"/>
+                                    <p:inputText  value="#{productoBean.producto.codBarra}"
+                                                  maxlength="49" placeholder="GENERICO"/>
+
+                                    <p:outputLabel value="Activar / Desactivar" style="font-weight: bold"/>    
+                                    <p:selectBooleanCheckbox value="#{productoBean.producto.check2}"> 
+                                    </p:selectBooleanCheckbox>
+
+                                </h:panelGrid>
+                                <br></br>
+                                <!--Ocultar dialogo oncomplete="PF('wdlgDatos').hide();    abrir oncomplete="PF('wdlgDatos').show();""-->
+                                <p:commandButton id="modificar" icon="ui-icon-check" value="#{productoBean.accion}" actionListener="#{productoBean.operar()}"
+                                                 rendered="#{indexBean.verificarPermisos(2,6,1)}"
+                                                 oncomplete="PF('wdlgDatos').hide();" update=":fm:data">  
+                                    <p:confirm header="Desea modificar el producto?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>
+                                </p:commandButton>
+                                <p:commandButton value="Cancelar" icon="ui-icon-close"  immediate="true" oncomplete="PF('wdlgDatos').hide();"/>            
+
+                            </p:dialog> 
+
+                            <div class="card"> 
+                                <p:growl id="message" showDetail="true"/>                        
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                                    <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
+                                    <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>                                
+                                </p:confirmDialog>   
+                            </div>
+                        </h:form> 
+
+                        <!--PRODUCTOS NUEVOS-->
+                        <h:form id="fmNuevoProducto">
+                            <p:dialog id="dlgNuevoProducto" widgetVar="dialogNuevo" modal="true" 
+                                      header="Nuevo Producto" resizable="false">
+
+                                <h:panelGrid columns="2" border="0" id="panel">
+                                    <p:outputLabel value="Otros productos" style="font-weight: bold"/>    
+                                    <p:selectBooleanCheckbox value="#{productoBean.producto.check}"                                                          
+                                                             itemLabel=" Para actividades (spinning, pesas, aerobicos)" style="font-weight: bold">
+                                        <p:ajax update="panel" listener="#{productoBean.renderPanel(event)}"/>
+                                    </p:selectBooleanCheckbox>
+
+                                    <p:outputLabel value="Nombre" rendered="#{productoBean.ver}"/>  
+                                    <p:outputLabel value="Actividad" rendered="#{!productoBean.ver}"/>  
+                                    <p:inputText value="#{productoBean.producto.nombreProducto}" maxlength="74" required="true" requiredMessage="El nombre es requerido"/>
+                                    <p:outputLabel value="Precio"/>    
+                                    <p:inputText value="#{productoBean.producto.precioVenta}" maxlength="10" required="true" requiredMessage="El precio es requerido"/>
+
+                                    <p:outputLabel value="Stock minimo" rendered="#{productoBean.ver}"/>  
+                                    <p:outputLabel value="Boleta minima" rendered="#{!productoBean.ver}"/>  
+                                    <p:inputText value="#{productoBean.producto.stockMinimo}" maxlength="9" required="true" requiredMessage="El stock minimo es requerido"/>
+
+                                    <p:outputLabel value="Stock actual" rendered="#{productoBean.ver}"/> 
+                                    <p:outputLabel value="Boleta actual" rendered="#{!productoBean.ver}"/> 
+                                    <p:inputText value="#{productoBean.producto.stockActual}" maxlength="9" required="true" requiredMessage="El stock actual es requerido"/>
+
+                                    <p:outputLabel value="Codigo de barra" rendered="#{productoBean.ver}"/> 
+                                    <p:outputLabel value="Codigo actividad" rendered="#{!productoBean.ver}"/>
+                                    <p:inputText  value="#{productoBean.producto.codBarra}"
+                                                  maxlength="49" placeholder="GENERICO"/>
+
+                                    <f:facet name="footer">
+                                        <p:separator/>
+                                        <p:outputLabel value="Si se deja vacio el codigo de barra el sistema asignan codigo GENERICO 01"/>    
+                                    </f:facet>
+                                </h:panelGrid>
+                                <br/>
+                                <p:commandButton id="guardar" value="Guardar" icon="ui-icon-disk" actionListener="#{productoBean.registrar()}" 
+                                                 rendered="#{indexBean.verificarPermisos(2,5,1)}"
+                                                 update="fm" oncomplete="PF('dialogNuevo').hide()"/>
+                                <p:commandButton value="Cancelar" icon="ui-icon-close" oncomplete="PF('dialogNuevo').hide()" ignoreAutoUpdate="true"/>
+                            </p:dialog>                                     
+                        </h:form>
+                        <!--PRODUCTOS NUEVOS-->
+
+                        <p:blockUI block="contenido" trigger=":fmNuevoProducto:guardar :formEditar:modificar :fm:data:delete"  >
+                            <p:graphicImage value="../resources/img/load3.gif"/>
+                        </p:blockUI>
+                    </p:fieldset> 
+                </div>
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <!--<link href="../resources/css/estilos1.css" rel="stylesheet" type="text/css"></link>-->    
+        <h:outputStylesheet name="css/estilos1.css" />
+    </h:head>
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/plantilla.xhtml">
+            <ui:define name="content">               
+
+                <div align="center">
+                    <p:fieldset legend="Informacion" id="contenido" style="width: 900px;">
+                        <h:form id="fmInformacion">
+                            <div align="center">      
+                                <h4 style="margin-top:0"><p:outputLabel value="HORARIO DE GIMNASIO:" style="font-weight: bold"/></h4>
+                                <h:panelGrid columns="2" border="0" cellpadding="4">
+                                    <p:outputLabel value="Lunes a jueves:"/>                            
+                                    <p:outputLabel value="5:00 am - 8:30pm "/>                            
+                                    <p:outputLabel value="Viernes:"/>                          
+                                    <p:outputLabel value="5:00 am - 8:00pm"/>                            
+                                    <p:outputLabel value="Sabados:"/>                           
+                                    <p:outputLabel value="6:00am - 12:00pm"/>                            
+                                </h:panelGrid>
+                                <br/>
+                                <h4 style="margin-top:0"><p:outputLabel value="HORARIO DE SPINNING:" style="font-weight: bold"/></h4>                           
+
+                                <h:panelGrid columns="2" border="0" cellpadding="4">
+                                    <p:outputLabel value="Lunes a viernes   "/>
+                                    <p:outputLabel value="6:00 am  -  6:45 am"/>   
+                                    <p:outputLabel value=" "/> 
+                                    <h:panelGrid columns="1" border="0" cellpadding="1"  >
+                                        <p:outputLabel value="Tarde:"/>                           
+                                        <p:outputLabel value="5:00 pm - 5:45 pm"/>
+                                        <p:outputLabel value="6:00 pm - 6:45 pm"/>
+                                        <p:outputLabel value="7:00 pm - 7:45 pm"/>
+                                    </h:panelGrid>
+
+                                    <p:outputLabel value="Sabados:"/> 
+                                    <p:outputLabel value="6:00 am - 6:45 am"/>
+                                </h:panelGrid>
+
+                            </div>
+                            <br/>
+                            <h4 style="margin-top:0"><p:outputLabel value="PRECIOS" style="font-weight: bold"/></h4>   
+                            <h:panelGrid columns="1" border="0" cellpadding="4" >
+                                <p:outputLabel value="Pesas : $25 (incluye spinning)"/>
+                                <p:outputLabel value="Spinning: $15"/>                           
+                                <p:outputLabel value="Matricula: $5"/>                           
+                                <p:outputLabel value="Entrenamiento personalizados $40"/>                           
+                            </h:panelGrid>
+
+                            <div align="left">
+                                <p:outputLabel value="Numero de teléfono 6142-9396" style="font-size: 15px;"/>
+                                <br/>
+                                <p:outputLabel value="Instagram: koryshine.sv" style="font-size: 15px;"/>
+                                <br/>
+                                <p:outputLabel value="Facebook: koryshine Fitness Club" style="font-size: 15px;"/>
+                                <br/>
+                                <p:outputLabel value="*SE TE REGALA UN DÍA DE PRUEBA TOTALMENTE GRATIS *" style="font-size: 15px;" />
+                                <br/>
+                            </div>   
+                            <p:blockUI block="contenido"   >
+                                <p:graphicImage value="../resources/img/load3.gif"/>
+                            </p:blockUI>
+                        </h:form>
+                        <br/>
+                        <h:form>
+                            <p:commandButton value="Imprimir" type="button" style="width: 150px; height: 60px"   
+                                             id="btnImprimir"                        
+                                             icon="ui-icon-print">
+                                <p:printer target="fmInformacion"/>
+                            </p:commandButton> 
+                        </h:form>
+                    </p:fieldset> 
+                </div>
+            </ui:define>
+
+
+        </ui:composition>
+
+    </body>
+</html>

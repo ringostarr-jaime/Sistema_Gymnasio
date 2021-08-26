@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+        <!--<link href="../../resources/css/estilos1.css" rel="stylesheet" type="text/css"></link>-->       
+        <title>KORYSHINE</title>
+        <f:event type="preRenderView" listener="#{indexBean.verificarSesion}"></f:event>      
+        <h:outputStylesheet name="css/estilos1.css" />
+    </h:head>
+
+    <h:body id="fondo2">
+
+        <div id="top"  >
+            <ui:insert name="top">
+                <h:form>  
+                     <p:graphicImage name="logo2.jpg" library="img" width="200px" height="100px"/>
+                    <br/>                    
+                    <p:dock id="dock" position="top" itemWidth="65" >
+                        <p:menuitem style="color: #ffffff; font-weight: bold" value="Informacion" url="./informacion.xhtml"  icon="/resources/img/info.png" ></p:menuitem>                    
+                        <p:menuitem style="color: #ffffff; font-weight: bold" value="Clientes" url="./clientes.xhtml"  icon="/resources/img/team.png" rendered="#{indexBean.verificarPermisos(1,3,1)}" ></p:menuitem>                    
+                        <p:menuitem style="color: #ffffff; font-weight: bold" value="Productos" url="./producto.xhtml" icon="/resources/img/clipboard.png" rendered="#{indexBean.verificarPermisos(2,8,1)}"></p:menuitem>                    
+                        <p:menuitem style="color: #ffffff; font-weight: bold" value="Ventas" url="./venta.xhtml" icon="/resources/img/sell.png" rendered="#{indexBean.verificarPermisos(3,13,1)}"></p:menuitem>
+                        <p:menuitem style="color: #ffffff; font-weight: bold" value="Reportes" url="./reportes.xhtml" icon="/resources/img/report.png" rendered="#{indexBean.verificarPermisos(4,18,1)}"></p:menuitem>
+                        <p:menuitem style="color: #ffffff; font-weight: bold" value="Usuarios" url="./usuarios.xhtml" icon="/resources/img/personas.png" rendered="#{indexBean.verificarPermisos(4,18,1)}"></p:menuitem>
+                        <p:menuitem style="color: #ffffff; font-weight: bold" icon="/resources/img/power.png" action="#{indexBean.cerrarSesion()}" value="Cerrar" update="message" >
+                         <p:confirm header="Cerrando sesion" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>
+                        </p:menuitem>                                             
+                    </p:dock> 
+                
+                    <br/> <br/> <br/>
+                       <p:clock pattern="dd-MM-yyyy HH:mm:ss " mode="server" />                     
+                    <div class="card"> 
+                        <p:growl id="message" showDetail="true"/>                        
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                            <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                            <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
+                        </p:confirmDialog>   
+                    </div>
+                     <!--<p:sticky target="dock" />-->
+                </h:form>
+               
+            </ui:insert>
+        </div>
+
+        <!--<div id="content" class="center_content">-->
+            <div id="cuerpo">
+                <ui:insert id="cuerpo" name="content"></ui:insert>
+
+                
+            </div> 
+        <!--</div>-->
+
+        <div id="bottom">      
+            <ui:insert name="bottom">                  
+                <!--<p:clock pattern="HH:mm:ss dd.MM.yyyy" mode="server" />-->
+            </ui:insert>
+        </div>
+    </h:body>
+
+</html>
