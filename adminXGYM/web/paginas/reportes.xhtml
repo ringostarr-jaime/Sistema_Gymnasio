@@ -17,7 +17,7 @@
                 <p:growl id="msj" autoUpdate="false" life="600" showDetail="true" />
                 <br/>      
                 <div align="center">
-                    <p:fieldset  id="contenido" legend="Reportes" rendered="#{indexBean.verificarPermisos(4,18,1)}" style="width: 500px">
+                    <p:fieldset  id="contenido" legend="Reportes" rendered="#{indexBean.verificarPermisos(4,1)}" style="width: 500px">
                         <h:form style="width: 900px">
 
                             <p:fieldset id="reportDetalle"  legend="REPORTE DETALLE DE FACTURAS" toggleable="true" >
@@ -25,7 +25,7 @@
                                 <p:outputLabel value="REALIZA LA BUSQUEDA DE FACTURAS CON SU DETALLE" style="text-align: center; font-weight: bold"/>
                                 <br/><br/>
                                 <h:panelGrid id="clienteDatos" border="0"  columns="2"  
-                                             rendered="#{indexBean.verificarPermisos(1,3,1)}"
+                                             rendered="#{indexBean.verificarPermisos(1,1)}"
                                              style="width: 500px">
 
                                     <p:outputLabel value="Fecha de inicio" style="text-align: center; font-weight: bold"/>
@@ -47,10 +47,10 @@
                                 <p:tooltip for="txtFechaInicio" value="Debes ingresar año mes dia"/>
                                 <p:tooltip for="txtFechaFinal" value="Debes ingresar año mes dia"/>
                                 <h:commandLink id="repoteLink" actionListener="#{reportes.verReporteFactura()}" 
-                                               rendered="#{indexBean.verificarPermisos(1,4,1)}"
+                                               rendered="#{indexBean.verificarPermisos(1,1)}"
                                                target="_blank" >
                                     <p:commandButton id="repoteLink2" value="Reporte" icon="ui-icon-print"   
-                                                     rendered="#{indexBean.verificarPermisos(1,4,1)}"
+                                                     rendered="#{indexBean.verificarPermisos(1,1)}"
                                                      update="msj"                                                  
                                                      />                                 
                                 </h:commandLink> 
@@ -61,7 +61,7 @@
                                 <p:outputLabel value="REALIZA LA BUSQUEDA DE LO FACTURADO POR AÑO" style="text-align: center; font-weight: bold"/>
                                 <br/><br/>
                                 <h:panelGrid  border="0"  columns="1"  
-                                              rendered="#{indexBean.verificarPermisos(1,3,1)}"
+                                              rendered="#{indexBean.verificarPermisos(1,1)}"
                                               style="width: 500px; text-align: center">
 
                                     <p:outputLabel value="Año" style="text-align: center; font-weight: bold"/>                                   
@@ -72,10 +72,10 @@
                                 <p:tooltip for="txtYear" value="Debes ingresar un año"/>
 
                                 <h:commandLink id="repoteLink3" actionListener="#{reportes.verReporteFacturaYears()}" 
-                                               rendered="#{indexBean.verificarPermisos(1,4,1)}"
+                                               rendered="#{indexBean.verificarPermisos(1,1)}"
                                                target="_blank" >
                                     <p:commandButton id="repoteLink4" value="Reporte" icon="ui-icon-print"   
-                                                     rendered="#{indexBean.verificarPermisos(1,4,1)}"
+                                                     rendered="#{indexBean.verificarPermisos(1,1)}"
                                                      update="msj"                                                  
                                                      />                                 
                                 </h:commandLink> 

@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:f="http://xmlns.jcp.org/jsf/core" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>GIMNASIO</title>       
+        <link href="resources/css/estiloLogin.css" rel="stylesheet" type="text/css"/>    
+        <style type="text/css">          
+            html {
+                background: url(resources/img/gym7.jpg) no-repeat center center fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+                overflow: hidden;
+            }
+        </style>
+        <script>
+            function local() {
+                var c = localStorage.getItem('c');
+                var u = document.getElementById('formClientes:user');
+                var p = document.getElementById('formClientes:pass');
+                if (c == 'true') {
+                    u.value = ''+localStorage.getItem('u');
+                    p.value = ''+localStorage.getItem('p');
+                } else {
+                }
+            }
+            function verificar() {
+                var checkBox = document.getElementById('checkbox-2-1');
+                var u = document.getElementById('formClientes:user');
+                var p = document.getElementById('formClientes:pass');
+                localStorage.setItem('c', checkBox.checked);
+                if (checkBox.checked == true) {
+                    localStorage.setItem('u', u.value);
+                    localStorage.setItem('p', p.value);
+                } else {
+                    localStorage.removeItem;
+                }
+
+            }
+        </script>
+    </h:head>
+    <h:body id="bodyClientes" onload="local()">  
+        <div id="container">
+            <h1 class="h1">Inicio de sesion</h1>
+            <h:form id="formClientes">
+                <p:growl autoUpdate="true" life="800" showDetail="true" ></p:growl>                               
+                <p:inputText class="input" id="user" placeholder="Usuario" value="#{indexBean.usuario.usuario}" required="true" requiredMessage="El campo usuario es requerido"/>
+                <p:password class="input" id="pass"  placeholder="Clave" value="#{indexBean.usuario.clave}" required="true" requiredMessage="El campo clave es requerido"/>
+                <p:commandButton class="a" onclick="verificar()"  id="btnIngresar"  value="Ingresar" icon="ui-icon-key" action="#{indexBean.iniciarSession()}"></p:commandButton>
+                <div id="remember-container">
+                    <input type="checkbox" id="checkbox-2-1" class="checkbox" checked="checked"></input>
+                    <span id="remember">Recordar</span>                   
+                </div>  
+                <br/><br/><br/><br/><br/>
+                <div style="background: #00000096">
+                    <p:outputLabel style="color: red" value="#{indexBean.errorConexion}" rendered="#{indexBean.errorConexion!=''}"/>
+                </div>
+                <p:blockUI block="formClientes" trigger="btnIngresar">
+                    <p:graphicImage value="resources/img/load3.gif"/>
+                </p:blockUI>
+            </h:form>  
+        </div>
+    </h:body>
+</html>
+

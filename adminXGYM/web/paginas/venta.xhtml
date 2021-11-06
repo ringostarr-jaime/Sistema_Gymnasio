@@ -19,7 +19,7 @@
                 <p:growl autoUpdate="true" life="1500" showDetail="true" />
                 <!--<h2>Factura</h2>-->
                 <br/>                
-                <h:form id="fmFactura" rendered="#{indexBean.verificarPermisos(3,13,1)}">
+                <h:form id="fmFactura" rendered="#{indexBean.verificarPermisos(3,1)}">
                     <!--<p:inputText value="# {ventaBeans.cantidad}"/>-->                    
                     <p:panel header="KS * KORYSHINE FITNESS CLUB" style="width:  1000px; margin: 0 auto; text-align: center">
                         <p:layout id="lyDatosCliente" style="width:  100%; height:  200px">
@@ -77,7 +77,7 @@
                         <!--OTROS MENSUALIDADES-->
 
                         <h:panelGrid id="pgBuscarProducto2" columns="3">
-                            <p:outputLabel value="Otros productos" style="font-weight: bold; font-size: 14px;" rendered="#{ventaBeans.ver}"/> 
+                            <p:outputLabel value="Otros productos (Inscripciones, Mensualidades, Personalizado)" style="font-weight: bold; font-size: 14px;" rendered="#{ventaBeans.ver}"/> 
                             <p:commandButton id="btnBuscarProductos2" value="Buscar" oncomplete="PF('dialogProductos2').show()"
                                              update=":fm:tablaProductos2" rendered="#{ventaBeans.ver}" />
                         </h:panelGrid>
@@ -102,7 +102,7 @@
                             <p:column headerText="Fecha Final">
                                 <h:outputText value="#{item2.fechaF}" />
                             </p:column>
-                            <p:column headerText="Eliminar" rendered="#{ventaBeans.ver and indexBean.verificarPermisos(3,12,1)}">
+                            <p:column headerText="Eliminar" rendered="#{ventaBeans.ver and indexBean.verificarPermisos(3,1)}">
                                 <!--ELIMINAR DATOS-->                                    
                                 <p:commandButton id="delete2" icon="ui-icon-trash" value="Eliminar" 
                                                  update=":fmFactura:dtProductosFactura2 :fmFactura" 
@@ -115,7 +115,7 @@
                         <br/>
                         <!--PRODUCTOS-->
                         <h:panelGrid id="pgBuscarProducto" columns="3">
-                            <p:outputLabel value="Productos" style="font-weight: bold; font-size: 14px;" rendered="#{ventaBeans.ver}"/>                           
+                            <p:outputLabel value="Productos (Agua, Soda, Proteina)" style="font-weight: bold; font-size: 14px;" rendered="#{ventaBeans.ver}"/>                           
                             <!--<p:inputText placeholder="Codigo" size="12"></p:inputText>-->
                             <p:commandButton id="btnBuscarProductos" value="Buscar" oncomplete="PF('dialogProductos').show()"
                                              update=":fm:tablaProductos" rendered="#{ventaBeans.ver}" />
@@ -140,7 +140,7 @@
                             <p:column headerText="Total">
                                 $ <h:outputText value="#{ventaBeans.totalp(item.precioVenta, item.cantidad)}" />
                             </p:column>  
-                            <p:column headerText="Eliminar" rendered="#{ventaBeans.ver and indexBean.verificarPermisos(3,12,1)}">
+                            <p:column headerText="Eliminar" rendered="#{ventaBeans.ver and indexBean.verificarPermisos(3,1)}">
                                 <!--ELIMINAR DATOS-->                                    
                                 <p:commandButton id="delete" icon="ui-icon-trash" value="Eliminar" 
                                                  update=":fmFactura:dtProductosFactura :fmFactura" 
@@ -209,7 +209,7 @@
                 <h:form id="fm">
                     <div align="center">
                         <p:commandButton value="Registrar" style="width: 150px; height: 60px" update="fmFactura fm"
-                                         id="registrar" disabled="#{!ventaBeans.ver}" rendered="#{indexBean.verificarPermisos(3,10,1)}"
+                                         id="registrar" disabled="#{!ventaBeans.ver}" rendered="#{indexBean.verificarPermisos(3,1)}"
                                          actionListener="#{ventaBeans.registrar()}"
                                          icon="ui-icon-disk">
                             <p:confirm header="Desea registrar la venta?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>                                    
@@ -218,7 +218,7 @@
                         <p:commandButton value="Imprimir" type="button" style="width: 150px; height: 60px"   
                                          id="btnImprimir"
                                        disabled="#{ventaBeans.ver}"
-                                         rendered="#{indexBean.verificarPermisos(3,14,1)}"
+                                         rendered="#{indexBean.verificarPermisos(3,1)}"
                                          update="btnBuscarProductos btnBuscarCliente"                                          
                                          icon="ui-icon-print">
                             <p:printer target="fmFactura"/>
@@ -263,7 +263,7 @@
                                 <div align="center">
                                     <p:commandButton icon="ui-icon-check" value="Seleccionar" update="fmFactura"
                                                      id="btnCliente"
-                                                     rendered="#{indexBean.verificarPermisos(3,10,1)}"
+                                                     rendered="#{indexBean.verificarPermisos(3,1)}"
                                                      actionListener="#{ventaBeans.leerID(tb)}"
                                                      oncomplete="PF('dialogCliente').hide()">
                                     </p:commandButton>
@@ -313,7 +313,7 @@
                                     <p:commandButton icon="ui-icon-check" value="Seleccionar" 
                                                      disabled="#{!(pro.stockActual>0)}"
                                                      update=":fmFactura:dtProductosFactura :fmFactura"
-                                                     rendered="#{indexBean.verificarPermisos(3,10,1)}"
+                                                     rendered="#{indexBean.verificarPermisos(3,1)}"
                                                      actionListener="#{ventaBeans.buscarProducto(pro)}"
                                                      oncomplete="PF('dialogProductos').hide()">
                                     </p:commandButton>
@@ -369,7 +369,7 @@
                                 <div align="center">
                                     <p:commandButton icon="ui-icon-check" value="Seleccionar" 
                                                      update=":fmFactura:dtProductosFactura2 :fmFactura"
-                                                     rendered="#{indexBean.verificarPermisos(3,10,1)}"
+                                                     rendered="#{indexBean.verificarPermisos(3,1)}"
                                                      actionListener="#{ventaBeans.buscarProducto(pro2)}"
                                                      oncomplete="PF('dialogProductos2').hide()">
                                     </p:commandButton>

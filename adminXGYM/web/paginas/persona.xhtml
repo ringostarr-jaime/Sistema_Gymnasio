@@ -82,7 +82,7 @@
                         </p:selectOneMenu>
                         <br></br>
                         <!--Ocultar dialogo oncomplete="PF('wdlgDatos').hide();    abrir oncomplete="PF('wdlgDatos').show();""-->
-                        <p:commandButton value="#{personaBean.accion}" actionListener="#{personaBean.operar()}" oncomplete="PF('wdlgDatos').hide();" update=":fm:data"/>             
+                        <!--<p:commandButton value="# {personaBean.accion}" actionListener="# {personaBean.operar()}" oncomplete="PF('wdlgDatos').hide();" update=":fm:data"/> -->
                         <p:commandButton value="Cancelar"  immediate="true" oncomplete="PF('wdlgDatos').hide();"/>            
                     </h:form>     
                         </div>

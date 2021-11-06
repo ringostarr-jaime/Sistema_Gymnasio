@@ -18,7 +18,7 @@
                 <p:growl id="msj" autoUpdate="false" life="600" showDetail="true" />
                 <p:fieldset id="contenido">
                     <div id="clientes1" align="center">
-                        <h:form id="formClientes" style="width: 1400px" enctype="multipart/form-data" rendered="#{indexBean.verificarPermisos(1,3,1)}">
+                        <h:form id="formClientes" style="width: 1400px" enctype="multipart/form-data" rendered="#{indexBean.verificarPermisos(1,1)}">
 
                             <p:fieldset legend="Clientes" >
                                 <h:panelGrid id="clienteDatos" border="0"  columns="3" style="width: 500px">
@@ -92,7 +92,7 @@
                                 <br></br>
                                 <p:commandButton id="save" update="formClientes" actionListener="#{clientesBean.guardarCliente()}" 
                                                  icon="ui-icon-plus" value="#{clientesBean.texto}" 
-                                                 rendered="#{indexBean.verificarPermisos(1,0,1)}"
+                                                 rendered="#{indexBean.verificarPermisos(1,1)}"
                                                  >
                                     <p:confirm header="Desea modificar al cliente?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>
                                 </p:commandButton>                               
@@ -104,10 +104,10 @@
                                 </p:commandButton>
                                 
                                 <h:commandLink id="repoteLink" actionListener="#{reportes.verReporte(clientesBean.clientes.idcliente)}"                                                
-                                               target="_blank" disabled="#{clientesBean.botonNuevo==1}" rendered="#{indexBean.verificarPermisos(1,4,1)}">
+                                               target="_blank" disabled="#{clientesBean.botonNuevo==1}" rendered="#{indexBean.verificarPermisos(1,1)}">
                                      <p:commandButton id="repoteLink2" value="Reporte" icon="ui-icon-print" 
                                                       
-                                                      rendered="#{indexBean.verificarPermisos(1,4,1)}"
+                                                      rendered="#{indexBean.verificarPermisos(1,1)}"
                                                       disabled="#{clientesBean.botonNuevo==1}"/>
                                     <f:param name="consultar" value="true"/> 
                                 </h:commandLink>    
@@ -119,7 +119,7 @@
                             <p:commandButton id="btnConsultar"  value="Consultar todos" actionListener="#{clientesBean.listarClientes(1)}" 
                                              icon="ui-icon-search"
                                              update="detalleClientes" ajax="false"  
-                                             rendered="#{indexBean.verificarPermisos(1,3,1)}"
+                                             rendered="#{indexBean.verificarPermisos(1,1)}"
                                              >
                                 <f:param name="consultar" value="true"/>                              
                             </p:commandButton>
@@ -127,15 +127,22 @@
                             <p:commandButton id="btnConsultar1"  value="Clientes mora" actionListener="#{clientesBean.listarClientes(2)}" 
                                              icon="ui-icon-search"
                                              update="detalleClientes" ajax="false"  
-                                             rendered="#{indexBean.verificarPermisos(1,3,1)}"
+                                             rendered="#{indexBean.verificarPermisos(1,1)}"
                                              >
                                 <f:param name="consultar" value="true"/>                              
                             </p:commandButton>
 
-                            <p:commandButton id="btnConsultar2"  value="Clientes desactivados" actionListener="#{clientesBean.listarClientes(3)}" 
+                            <p:commandButton id="btnConsultar2"  value="Clientes vigentes" actionListener="#{clientesBean.listarClientes(3)}" 
                                              icon="ui-icon-search"
                                              update="detalleClientes" ajax="false"  
-                                             rendered="#{indexBean.verificarPermisos(1,3,1)}"
+                                             rendered="#{indexBean.verificarPermisos(1,1)}"
+                                             >
+                                <f:param name="consultar" value="true"/>                              
+                            </p:commandButton>
+                             <p:commandButton id="btnConsultar3"  value="Clientes desactivados" actionListener="#{clientesBean.listarClientes(4)}" 
+                                             icon="ui-icon-search"
+                                             update="detalleClientes" ajax="false"  
+                                             rendered="#{indexBean.verificarPermisos(1,1)}"
                                              >
                                 <f:param name="consultar" value="true"/>                              
                             </p:commandButton>
@@ -145,7 +152,7 @@
                             </p:blockUI>
                             <br/>
                             <br/>
-                            <p:dataTable id="det" value="#{clientesBean.clientesLista}"                                       
+                            <p:dataTable id="det" value="#{clientesBean.clientesLista}" 
                                          var="det"
                                          rows="5"
                                          reflow="true"
@@ -164,45 +171,46 @@
                                     Lista de clientes 
                                     <p:outputLabel style="font-size: 12px;" value="(para realizar busquedas mediante el filtro de activo escribir 1 para activo 0 para mora)" />                                          
                                 </f:facet>
-
-                                <p:column headerText="Nombre" filterBy="#{det.nombreCompleto}" filterMatchMode="contains"
+                                
+                                <p:column headerText="Nombre" filterBy="#{det.nombreCompleto}" filterMatchMode="contains" styleClass="centeredColumnContent"
                                           visible="#{clientesBean.list[0]}">
                                     <p:outputLabel value="#{det.nombreCompleto}"></p:outputLabel>
                                 </p:column>   
 
-                                <p:column headerText="Edad" sortBy="#{det.fecha2}" visible="#{clientesBean.list[1]}" >
+                                <p:column headerText="Edad" sortBy="#{det.fecha2}" visible="#{clientesBean.list[1]}" styleClass="centeredColumnContent" >
                                     <!--<p:outputLabel value="# {clientesBean.edadYYYYmmdd(det.fechaNac)}"></p:outputLabel> -->
                                     <p:outputLabel value="#{det.fecha2}"></p:outputLabel> 
                                 </p:column> 
 
-                                <p:column headerText="Vigencia" filterBy="#{det.estado}" visible="#{clientesBean.list[2]}">
+                                <p:column headerText="Vigencia" filterBy="#{det.estado}" visible="#{clientesBean.list[2]}" styleClass="centeredColumnContent">
                                     <p:outputLabel value="#{clientesBean.estadoCliente(det.estado)}"></p:outputLabel>                            
                                 </p:column>   
 
-                                <p:column headerText="Fotografia" visible="#{clientesBean.list[3]}">
-                                    <p:graphicImage id="detalleClientes2" value="#{images.obtenerImagen()}" style="max-width: 150px;" cache="false">
+                                <p:column headerText="Fotografia" visible="#{clientesBean.list[3]}" colspan="1" styleClass="centeredColumnContent">
+                                    <p:graphicImage id="detalleClientes2" value="#{images.obtenerImagen()}" style="max-width: 250px;" cache="false" >
                                         <f:param name="id2" value="#{det.imagen}" />
                                     </p:graphicImage>  
                                 </p:column>
 
-                                <p:column headerText="Telefono" filterBy="#{det.telefono}" visible="#{clientesBean.list[4]}">
+                                <p:column headerText="Telefono" filterBy="#{det.telefono}" visible="#{clientesBean.list[4]}" styleClass="centeredColumnContent">
                                     <p:outputLabel value="#{det.telefono}"></p:outputLabel>                            
                                 </p:column> 
 
-                                <p:column headerText="Correo" filterBy="#{det.correo}" visible="#{clientesBean.list[5]}">
+                                <p:column headerText="Correo" filterBy="#{det.correo}" visible="#{clientesBean.list[5]}" styleClass="centeredColumnContent">
                                     <p:outputLabel value="#{det.correo}" ></p:outputLabel>                            
                                 </p:column> 
 
-                                <p:column headerText="Dui" filterBy="#{det.dui}" filterMatchMode="contains" visible="#{clientesBean.list[6]}">
+                                <p:column headerText="Dui" filterBy="#{det.dui}" filterMatchMode="contains" visible="#{clientesBean.list[6]}" styleClass="centeredColumnContent">
                                     <p:outputLabel value="#{det.dui}"></p:outputLabel>                            
                                 </p:column> 
 
-                                <p:column headerText="Comentarios" filterBy="#{det.nota}" visible="#{clientesBean.list[7]}">
-                                    <p:outputLabel value="#{det.nota}"/>                                                                       
+                                <p:column  headerText="Comentarios" filterBy="#{det.nota}" visible="#{clientesBean.list[7]}" styleClass="centeredColumnContent">
+                                    <!--<p:outputLabel value="# {det.nota}"/>-->   
+                                    <p:inputTextarea value="#{det.nota}"  readonly="true" />
                                 </p:column> 
 
                                 <!--MODIFICAR DATOS-->
-                                <p:column headerText="Modificar /Eliminar" visible="#{clientesBean.list[8]}">
+                                <p:column  headerText="Modificar /Eliminar" visible="#{clientesBean.list[8]}" styleClass="centeredColumnContent">
                                     <!--Haciendo uso de var persona en el actionlistener como parametro de la fila leerID-->
                                     <!--oncomplete abre el dialogo los : del update se usa para decirle que se encuentra fuera del form :-->                                    
                                     <p:commandButton id="linkMod" value="Revisar"
@@ -211,14 +219,14 @@
                                                      actionListener="#{clientesBean.leerDatosCliente(det)}" 
                                                      update="imagen2 repoteLink repoteLink2" ajax="false" 
                                                       disabled="#{(det.nombre.trim().equals('CLIENTE-GENERICO'))}"  
-                                                     rendered="#{indexBean.verificarPermisos(1,1,1)}">
+                                                     rendered="#{indexBean.verificarPermisos(1,1)}">
                                         <f:param name="consultar" value="true"/>                                      
                                     </p:commandButton>                                    
                                     <p:commandButton id="linkDel" value="   Eliminar"  actionListener="#{clientesBean.borrarDatosCliente(det)}" 
                                                      style="width: 140px; height: 40px"
                                                      icon="ui-icon-trash"
                                                      disabled="#{(det.nombre.trim().equals('CLIENTE-GENERICO'))}"  
-                                                   rendered="#{indexBean.verificarPermisos(1,2,1)}"
+                                                   rendered="#{indexBean.verificarPermisos(1,1)}"
                                                    update="formClientes"
                                                    action="clientes?faces-redirect=true">
                                         
@@ -226,9 +234,9 @@
                                         <p:confirm header="Desea eliminar al cliente?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>                                    
                                     </p:commandButton>                                    
                                 </p:column>
-
+                                
                                 <f:facet name="footer">                                  
-                                    Total de clientes activos #{clientesBean.clientesLista.size()}, en mora #{clientesBean.contar.campo0}, vigentes #{clientesBean.contar.campo1}, desactivados #{clientesBean.contar.campo2}                                       
+                                    Total de clientes activos #{clientesBean.clientesLista.size()}, en mora #{clientesBean.contar.campo0}, vigentes #{clientesBean.contar.campo1} <!--desactivados # {clientesBean.contar.campo2}-->                                       
 
                                 </f:facet>
                             </p:dataTable>
@@ -239,8 +247,8 @@
                                     <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
                                     <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
                                 </p:confirmDialog>   
-                            </div>
-
+                        
+                                  </div>
                         </h:form>
 
                         <!-- <p:fieldset legend="Consultar clientes" collapsed="true" toggleable="true">-->

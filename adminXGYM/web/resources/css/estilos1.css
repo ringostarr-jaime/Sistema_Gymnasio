@@ -13,9 +13,13 @@ and open the template in the editor.
     /*background-color: #C60;*/
 }
 
+td.centeredColumnContent{
+    text-align: center;
+}
+
 
 @page {
-   /* size: auto;  */
+    /* size: auto;  */
     margin: 0;  
     margin-left: 25px;  
     margin-right: 50px;  
@@ -29,7 +33,12 @@ body{
     padding-top: 1.1cm;
 }*/
 
+.clockwork
+{
+    border: 1px solid #eeeeee !important;
+    background: #eeeeee !important; 
 
+}
 
 
 /*#fondo {

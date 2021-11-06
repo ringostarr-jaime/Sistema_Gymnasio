@@ -17,23 +17,26 @@
                 <br/>
                 <div align="center">
                     <p:fieldset legend="Productos" id="contenido" style="width: 1200px;">
-                        <h:form id="fm" rendered="#{indexBean.verificarPermisos(2,8,1)}" >                          
-                                                 
+                        <h:form id="fm" rendered="#{indexBean.verificarPermisos(2,1)}" >                      
+                                  
                             <!--INSERTAR DATOS-->
                             <!--update=":msj"-->
                             <div align="left">
                                 <p:commandButton icon="ui-icon-plus" value="Nuevo" oncomplete="PF('dialogNuevo').show();" 
-                                                 rendered="#{indexBean.verificarPermisos(2,5,1)}"
+                                                 rendered="#{indexBean.verificarPermisos(2,1)}"
                                                  style="align-content: flex-end"
                                                  actionListener="#{productoBean.setAccion('Registrar')}" update="fmNuevoProducto"/>
                             </div>
+                            <br/>
+                            <p:outputLabel value="Recuerda selecionar los productos en el checkbox de otros productos si creas entrenamientos personalizados para que sean contabilizados"/>          
+                            <br/><br/>
                             <div align="center">                              
                                 <p:commandButton icon="ui-icon-search" value="Productos activos"  
-                                                 rendered="#{indexBean.verificarPermisos(2,5,1)}"
+                                                 rendered="#{indexBean.verificarPermisos(2,1)}"
                                                  actionListener="#{productoBean.listarProductosEstados('v', 1,0,0)}" update="data"/>
                                 &nbsp;
                                 <p:commandButton icon="ui-icon-search" value="Productos desactivados" 
-                                                 rendered="#{indexBean.verificarPermisos(2,5,1)}"
+                                                 rendered="#{indexBean.verificarPermisos(2,1)}"
                                                  actionListener="#{productoBean.listarProductosEstados('v',0,0,0)}" update="data"/>
 
                             </div>  
@@ -76,12 +79,12 @@
                                     <!--Haciendo uso de var persona en el actionlistener como parametro de la fila leerID-->
                                     <!--oncomplete abre el dialogo los : del update se usa para decirle que se encuentra fuera del form :-->
                                     <p:commandButton icon="ui-icon-pencil" value="Editar"  actionListener="#{productoBean.leerID(dt)}" 
-                                                     rendered="#{indexBean.verificarPermisos(2,6,1)}"
+                                                     rendered="#{indexBean.verificarPermisos(2,1)}"
                                                      oncomplete="PF('wdlgDatos').show();" update=":formEditar">                             
                                     </p:commandButton>                          
 
                                     <!--ELIMINAR DATOS-->                                    
-                                    <p:commandButton id="delete" icon="ui-icon-trash" value="Eliminar"  actionListener="#{productoBean.eliminar(dt)}"  oncomplete="PF('wdlgEliminar').show();"  action="producto?faces-redirect=true" rendered="#{indexBean.verificarPermisos(2,7,1)}">               
+                                    <p:commandButton id="delete" icon="ui-icon-trash" value="Eliminar"  actionListener="#{productoBean.eliminar(dt)}"  oncomplete="PF('wdlgEliminar').show();"  action="producto?faces-redirect=true" rendered="#{indexBean.verificarPermisos(2,1)}">               
                                         <p:confirm header="Desea eliminar el producto?" message="Esta seguro de realizar la operacion (Si el producto ya tiene un registro de venta este no se prodra eliminar pero puede ser desactivado en la opcion de modificar)?" icon="ui-icon-info"/>                           
                                     </p:commandButton>                   
                                 </p:column>
@@ -140,7 +143,7 @@
                                 <br></br>
                                 <!--Ocultar dialogo oncomplete="PF('wdlgDatos').hide();    abrir oncomplete="PF('wdlgDatos').show();""-->
                                 <p:commandButton id="modificar" icon="ui-icon-check" value="#{productoBean.accion}" actionListener="#{productoBean.operar()}"
-                                                 rendered="#{indexBean.verificarPermisos(2,6,1)}"
+                                                 rendered="#{indexBean.verificarPermisos(2,1)}"
                                                  oncomplete="PF('wdlgDatos').hide();" update=":fm:data">  
                                     <p:confirm header="Desea modificar el producto?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>
                                 </p:commandButton>
@@ -195,7 +198,7 @@
                                 </h:panelGrid>
                                 <br/>
                                 <p:commandButton id="guardar" value="Guardar" icon="ui-icon-disk" actionListener="#{productoBean.registrar()}" 
-                                                 rendered="#{indexBean.verificarPermisos(2,5,1)}"
+                                                 rendered="#{indexBean.verificarPermisos(2,1)}"
                                                  update="fm" oncomplete="PF('dialogNuevo').hide()"/>
                                 <p:commandButton value="Cancelar" icon="ui-icon-close" oncomplete="PF('dialogNuevo').hide()" ignoreAutoUpdate="true"/>
                             </p:dialog>                                     

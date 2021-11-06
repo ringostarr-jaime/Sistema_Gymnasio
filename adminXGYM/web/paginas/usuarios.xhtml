@@ -21,7 +21,7 @@
                 <div align="center">
 
 
-                    <p:fieldset legend="Usuarios" id="contenido" style="width: 1300px;" rendered="#{indexBean.verificarPermisos(5,23,1)}">    
+                    <p:fieldset legend="Usuarios" id="contenido" style="width: 1300px;" rendered="#{indexBean.verificarPermisos(5,1)}">    
 
                         <h:form id="fm">  
                             <!--INSERTAR DATOS-->
@@ -29,7 +29,7 @@
                             <div align="left">
                                 <p:commandButton value="Nuevo usuario" oncomplete="PF('wdlgDatos').show();"
                                                  icon="ui-icon-plus"    
-                                                 rendered="#{indexBean.verificarPermisos(5,20,1)}"
+                                                 rendered="#{indexBean.verificarPermisos(5,1)}"
                                                  actionListener="#{usuariosBean.setAccion('Registrar')}" update="dlgDatos"/>
                             </div>
                             <!--Haciendo uso de la var para capturar la fila-->
@@ -85,14 +85,14 @@
                                 <!--MODIFICAR DATOS-->
                                 <p:column headerText="Opcion" colspan="2">                                    
                                     <p:commandButton value="Modificar"  actionListener="#{usuariosBean.leerID(usu)}"  
-                                                     disabled="#{!indexBean.verificarPermisos(5,21,1)}"
+                                                     disabled="#{!indexBean.verificarPermisos(5,1)}"
                                                      icon="ui-icon-pencil" rendered="#{!((usu.usuario.trim().equals('admin'))and((usu.nombre.trim().equals('ADMINISTRADOR'))) )}"
                                                      oncomplete="PF('wdlgDatos').show();" update=":dlgDatos">
                                         <p:ajax  listener="#{usuariosBean.setAccion('Modificar')}" />
                                     </p:commandButton>
 
                                     <p:commandButton value="Eliminar" actionListener="#{usuariosBean.eliminarUsuario(usu)}" 
-                                                     disabled="#{!indexBean.verificarPermisos(5,22,1)}"
+                                                     disabled="#{!indexBean.verificarPermisos(5,1)}"
                                                      rendered="#{!((usu.usuario.trim().equals('admin'))and((usu.nombre.trim().equals('ADMINISTRADOR'))) )}"
                                                      icon="ui-icon-trash"                                                     
                                                      action="usuarios?faces-redirect=true">
@@ -106,9 +106,7 @@
                                     <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-check"></p:commandButton>
                                 </p:confirmDialog>
                             </p:dataTable>
-
                         </h:form>
-
 
                         <!--el widgetbar nos va a servir para mostrar o cultar el dialogo-->
                         <p:dialog style="width: 1200px;" header="Ingresar usuario" widgetVar="wdlgDatos" id="dlgDatos" showEffect="explode" hideEffect="explode">
@@ -163,12 +161,7 @@
                                         <p:commandButton value="Cancelar"  immediate="true"
                                                          icon="ui-icon-close"
                                                          oncomplete="PF('wdlgDatos').hide();"/>            
-                                    </h:panelGrid>
-                                    <!--BLOCK-->
-                                    <p:blockUI block="fm" trigger=":fmUsuarios:modificar"  >
-                                        <p:graphicImage value="../resources/img/load3.gif"/>
-                                    </p:blockUI>  
-                                    <!--BLOCK-->
+                                    </h:panelGrid>                                    
                                     <div class="card"> 
                                         <p:growl id="message" showDetail="true"/>                        
                                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
@@ -176,6 +169,11 @@
                                             <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
                                         </p:confirmDialog>   
                                     </div>
+                                    <!--BLOCK-->
+                                    <p:blockUI block="fm" trigger=":fmUsuarios:modificar"  >
+                                        <p:graphicImage value="../resources/img/load3.gif"/>
+                                    </p:blockUI>  
+                                    <!--BLOCK-->
                                 </h:form>     
                             </div>
                         </p:dialog>
@@ -183,14 +181,13 @@
 
                     <br/>
 
-                    <p:fieldset legend="Roles" id="contenido2" style="width: 1300px;" rendered="#{indexBean.verificarPermisos(5,23,1)}">    
-
+                    <p:fieldset legend="Roles" id="contenido2" style="width: 1300px;" rendered="#{indexBean.verificarPermisos(5,1)}">    
                         <h:form id="fm2">  
                             <!--INSERTAR DATOS-->
                             <!--update=":msj"-->            
                             <div align="left">
                                 <p:commandButton value="Nuevo rol" oncomplete="PF('wdlgDatos2').show();"
-                                                 icon="ui-icon-plus" rendered="#{indexBean.verificarPermisos(5,20,1)}"                                   
+                                                 icon="ui-icon-plus" rendered="#{indexBean.verificarPermisos(5,1)}"                                   
                                                  actionListener="#{usuariosBean.setAccion('Registrar')}" update="dlgDatos2"/>
                             </div>
                             <!--Haciendo uso de la var para capturar la fila-->
@@ -233,7 +230,7 @@
                                 <!--MODIFICAR DATOS-->
                                 <p:column headerText="Opcion" colspan="2">                                    
                                     <p:commandButton value="Modificar"  actionListener="#{usuariosBean.leerRol(rol)}"  
-                                                     icon="ui-icon-pencil" disabled="#{!indexBean.verificarPermisos(5,21,1)}"
+                                                     icon="ui-icon-pencil" disabled="#{!indexBean.verificarPermisos(5,1)}"
                                                      rendered="#{!((rol.idrol==1)and((rol.nombre.trim().equals('admin'))) ) }"
                                                      oncomplete="PF('wdlgDatos2').show();" update=":dlgDatos2 fmUsuarios2">
                                         <p:ajax  listener="#{usuariosBean.setAccion('Modificar')}" />
@@ -242,7 +239,7 @@
                                     <p:commandButton value="Eliminar" actionListener="#{usuariosBean.eliminarRol(rol)}" 
                                                      rendered="#{!((rol.idrol==1)and((rol.nombre.trim().equals('admin'))) )}"
                                                      icon="ui-icon-trash"     
-                                                     disabled="#{!indexBean.verificarPermisos(5,22,1)}"
+                                                     disabled="#{!indexBean.verificarPermisos(5,1)}"
                                                      action="usuarios?faces-redirect=true">
                                         <p:confirm header="Eliminacion de ROL" message="Esta seguro de eliminar este ROL" icon="ui-icon-alert"></p:confirm>
                                     </p:commandButton>
@@ -254,9 +251,7 @@
                                     <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-check"></p:commandButton>
                                 </p:confirmDialog>
                             </p:dataTable>
-
                         </h:form>
-
 
                         <!--el widgetbar nos va a servir para mostrar o cultar el dialogo-->
                         <p:dialog style="width: 1200px;" header="Ingresar Roles" widgetVar="wdlgDatos2" id="dlgDatos2" showEffect="explode" hideEffect="explode">
@@ -300,7 +295,7 @@
                                         <p:outputLabel value="" rendered="#{usuariosBean.accion.equals('Modificar')}"/>
                                         <p:commandButton value="#{usuariosBean.accion}" actionListener="#{usuariosBean.registrarRoles()}" 
                                                          icon="ui-icon-disk" id="modificar2"
-                                                         disabled="#{!indexBean.verificarPermisos(5,21,1)}"
+                                                         disabled="#{!indexBean.verificarPermisos(5,1)}"
                                                          oncomplete="PF('wdlgDatos2').hide();" update="contenido2 :fm2:data2 fmUsuarios2">             
                                             <p:confirm header="Desea registrar el rol?" message="Esta seguro de realizar la operacion?" icon="ui-icon-info"/>                                    
                                         </p:commandButton>
@@ -308,11 +303,7 @@
                                                          icon="ui-icon-close"
                                                          oncomplete="PF('wdlgDatos2').hide();"/>            
                                     </h:panelGrid>
-                                    <!--BLOCK-->
-                                    <p:blockUI block="fm2" trigger=":fmUsuarios2:modificar2"  >
-                                        <p:graphicImage value="../resources/img/load3.gif"/>
-                                    </p:blockUI>  
-                                    <!--BLOCK-->
+                                  
                                     <div class="card2"> 
                                         <p:growl id="message2" showDetail="true"/>                        
                                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
@@ -320,12 +311,17 @@
                                             <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" />
                                         </p:confirmDialog>   
                                     </div>
+                                      <!--BLOCK-->
+                                    <p:blockUI block="fm2" trigger=":fmUsuarios2:modificar2"  >
+                                        <p:graphicImage value="../resources/img/load3.gif"/>
+                                    </p:blockUI>  
+                                    <!--BLOCK-->
                                 </h:form>     
                             </div>
                         </p:dialog>
-
                     </p:fieldset>
-                          <br/>
+                    
+                   <br/>
                   <p:fieldset legend="Opciones" id="contenido3" style="width: 1300px;" >    
 
                         <h:form id="fm3">  
@@ -354,6 +350,7 @@
                         </h:form>       
 
                     </p:fieldset>
+                        <br/><br/><br/>
                 </div>
                
             </ui:define>
