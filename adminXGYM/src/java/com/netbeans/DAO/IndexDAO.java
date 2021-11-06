@@ -39,9 +39,8 @@ public class IndexDAO extends DAO {
                 usuario.setCorreo(rs.getString("correo"));
                 usuario.setRol(rs.getInt("rol"));
             }
-        } catch (Exception e) {
+        } catch (Exception e) {         
             throw e;
-
         } finally {
             this.cerrar();
         }
@@ -87,7 +86,7 @@ public class IndexDAO extends DAO {
             }
             //System.out.println("SIZE "+listarPermisos.size());
         } catch (Exception e) {            
-            tmas="bootstrap";
+            tmas="bootstrap1";
         } finally {
             this.cerrar();
         }

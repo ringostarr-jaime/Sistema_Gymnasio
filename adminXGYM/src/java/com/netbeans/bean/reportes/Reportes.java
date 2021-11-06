@@ -8,6 +8,7 @@ package com.netbeans.bean.reportes;
 import com.netbeans.model.ListaParametros;
 import com.netbeans.reporte.ReporteMenu;
 import com.util.HerramientasUtil;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class Reportes implements Serializable {
     //</editor-fold>  
 
 
-    public void verReporte(int idCliente) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public void verReporte(int idCliente) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
         //String ruta = servletContext.getRealPath("/Reportes/clientes/clienteEspecifico.jasper");
         String ruta = servletContext.getRealPath("/WEB-INF/Reportes/clientes/clienteEspecifico.jasper");
         List<ListaParametros> parametros = new ArrayList<>();
@@ -94,7 +95,7 @@ public class Reportes implements Serializable {
 
     }
 
-    public void verReporteFactura() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public void verReporteFactura() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, IOException {
         //String ruta = servletContext.getRealPath("/Reportes/facturas/facturasMain.jasper");
         String ruta = servletContext.getRealPath("/WEB-INF/Reportes/facturas/facturasMain.jasper");
         
@@ -114,7 +115,7 @@ public class Reportes implements Serializable {
 
     }
     
-    public void verReporteFacturaYears() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public void verReporteFacturaYears() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
         //String ruta = servletContext.getRealPath("/Reportes/facturas/facturadoMes.jasper");
         String ruta = servletContext.getRealPath("/WEB-INF/Reportes/facturas/facturadoMes.jasper");
         if (years!=0) {
@@ -130,7 +131,7 @@ public class Reportes implements Serializable {
 
     }
     
-    public void verReporteClientesMora() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public void verReporteClientesMora() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
         //String ruta = servletContext.getRealPath("/Reportes/clientes/clienteEspecifico.jasper");
         String ruta = servletContext.getRealPath("/WEB-INF/Reportes/clientes/clienteEspecifico.jasper");
         if (years!=0) {

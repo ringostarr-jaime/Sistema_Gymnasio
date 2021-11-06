@@ -295,12 +295,14 @@ public class ClientesDAO extends DAO {
                 case 1:
                     sql = sql.concat(" where estado in (0,1,2) order by idclientes asc");
                     break;
-
                 case 2:
                     sql = sql.concat(" where estado =0 order by idclientes asc");
                     break;
-                case 3:
-                    sql = sql.concat(" where estado =2 order by idclientes asc");
+                case 3:                   
+                    sql = sql.concat(" where estado =1 order by idclientes asc");       
+                    break;
+                 case 4: 
+                    sql = sql.concat(" where estado =2 order by idclientes asc");    
                     break;
             }
 
@@ -319,7 +321,7 @@ public class ClientesDAO extends DAO {
                 c.setImagen(rs.getInt("idimagenes"));
                 c.setNota(rs.getString("nota"));
                 c.setTelefono(rs.getString("telefono"));
-                c.setDui(rs.getString("dui"));
+                c.setDui(rs.getString("dui"));                
                 c.setNombreCompleto(rs.getString("nombres") + " " + rs.getString("apellidos"));
                 lista.add(c);
             }
@@ -467,7 +469,7 @@ public class ClientesDAO extends DAO {
         String sql = "";
         try {
             this.Conectar();
-            sql = "select IF ((select f.idclientes from ventas.factura f inner join ventas.detallefactura df on f.codFactura = df.codFactura where idclientes = ?  and df.nombreProducto in ('ENTRENAMIENTO','PESAS','SPINNING') and DATE(df.fechaFinal) >= (SELECT DATE(NOW())) group by df.fechaFinal order by df.fechaFinal desc limit 1),0,1) valor";
+            sql = "select IF ((select f.idclientes from ventas.factura f inner join ventas.detallefactura df on f.codFactura = df.codFactura where idclientes = ?  and df.codProducto in (select codProducto from ventas.producto where otrosProductos = 1) and DATE(df.fechaFinal) >= (SELECT DATE(NOW())) group by df.fechaFinal order by df.fechaFinal desc limit 1),0,1) valor";
             PreparedStatement st = this.getCn().prepareStatement(sql);
             st.setInt(1, id);
             rs = st.executeQuery();
@@ -515,7 +517,7 @@ public class ClientesDAO extends DAO {
         int respuesta=0;
         try {
             String sql = "";
-            sql = "insert into ventas.seguimiento revisado values(1)";
+            sql = "insert into ventas.seguimiento (revisado) values(1)";
             this.Conectar();
             this.getCn().setAutoCommit(false);
             PreparedStatement st = this.getCn().prepareStatement(sql);           
@@ -524,6 +526,7 @@ public class ClientesDAO extends DAO {
             this.getCn().commit();
 
         } catch (Exception e) {
+             System.out.println("===ERROR insertSeguimiento "+e);
             this.getCn().rollback();
             respuesta = 0;
         } finally {
@@ -534,5 +537,32 @@ public class ClientesDAO extends DAO {
     }
 //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="BUSCAR ULTIMO PAGO DEL CLIENTE">
+     public String ultimoPago(int id) throws Exception {    
+        ResultSet rs;
+        String sql = "";
+        String datos="";
+        try {
+            this.Conectar();
+            sql = "select d.nombreProducto producto ,d.fechaInicio inicio, d.fechaFinal final, f.totalVenta total from ventas.factura f inner join ventas.detallefactura d on d.codFactura = f.codFactura where f.idclientes=? and f.codFactura  = (select max(ff.codFactura) from ventas.factura ff inner join ventas.detallefactura d on d.codFactura = ff.codFactura inner join ventas.producto p on d.codProducto = p.codProducto where p.otrosProductos=1 and ff.idclientes=? and d.fechaFinal=( SELECT MAX(dd.fechaFinal) from ventas.detallefactura dd inner join ventas.factura fff on fff.codFactura = dd.codFactura inner join ventas.producto pp on dd.codProducto = pp.codProducto where fff.idclientes=? and pp.otrosProductos=1))"; 
+            PreparedStatement st = this.getCn().prepareStatement(sql);
+            st.setInt(1, id);
+            st.setInt(2, id);
+            st.setInt(3, id);
+            rs = st.executeQuery(); 
+            while (rs.next()) {
+             datos=rs.getString("producto");
+             datos=datos+"\nINICIO "+rs.getString("inicio");
+             datos=datos+"\nFIN "+rs.getString("final");  
+             datos=datos+"\n$"+rs.getString("total");                          
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.cerrar();
+        }
+        return datos;
+    }
+    //</editor-fold>
     
 }

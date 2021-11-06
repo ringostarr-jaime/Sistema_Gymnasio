@@ -156,7 +156,8 @@ public class ClientesBean implements Serializable {
     @PostConstruct
     public void init()
     {
-        list = Arrays.asList(true, false, true, true, false, true, true, true, true);
+        //----para ocultarlos en la tabla en automatico
+        list = Arrays.asList(true, false, true, true, false, false, false, true, true);
     }
     
      public void onToggle(ToggleEvent e) {
@@ -341,11 +342,18 @@ public class ClientesBean implements Serializable {
             cd = new ClientesDAO();
             //---Revisamos si ya esta cargada la lista           
             clientesLista = cd.listarClientesAll(opcion);
+            
+            //------AGREGAR EL ULTIMO PAGO DEL CLIENTE A LAS NOTAS
+            //--SOLO PARA MOSTRARLO
+            for (int i = 0; i < clientesLista.size(); i++) {            
+            clientesLista.get(i).setNota(clientesLista.get(i).getNota()+"\n\n"+cd.ultimoPago(clientesLista.get(i).getIdcliente()));               
+                    
+            }
+            
             contar();
 
         } catch (Exception e) {
-            System.out.println("Error en listarClientes " + e);
-            FacesMessage message = new FacesMessage("Error al listar clientes " + e);
+            System.out.println("Error en listarClientes " + e);            
         }
 
     }

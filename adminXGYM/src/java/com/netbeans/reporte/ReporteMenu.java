@@ -11,6 +11,9 @@ import static com.netbeans.DAO.DAO.user;
 import com.netbeans.model.ListaParametros;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,6 +21,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.faces.context.FacesContext;
 
 import javax.servlet.ServletOutputStream;
@@ -40,9 +44,8 @@ public class ReporteMenu {
 
     Connection conexion;
 
-    public void getReporte(String ruta, List<ListaParametros> parametros, boolean parametro) throws ClassNotFoundException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
-
-        Class.forName("com.mysql.jdbc.Driver").newInstance();
+    public void getReporte(String ruta, List<ListaParametros> parametros, boolean parametro) throws ClassNotFoundException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException, FileNotFoundException, IOException {
+        
         conexion = DriverManager.getConnection(jdbc, user, pass);
 
         //Se definen los parametros que el reporte necesita

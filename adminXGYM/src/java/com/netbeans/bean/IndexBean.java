@@ -9,7 +9,6 @@ import com.netbeans.DAO.ClientesDAO;
 import com.netbeans.DAO.IndexDAO;
 
 import com.netbeans.model.Permisos;
-import com.netbeans.model.Theme;
 import com.netbeans.model.Usuario;
 
 import java.io.Serializable;
@@ -39,9 +38,18 @@ public class IndexBean implements Serializable {
     private int idUsuario;
     //private List<Theme> themes;
     private String temas;
+    private String errorConexion;
 
     //<editor-fold defaultstate="collapsed" desc="GET SET">   
 
+    public String getErrorConexion() {
+        return errorConexion;
+    }
+
+    public void setErrorConexion(String errorConexion) {
+        this.errorConexion = errorConexion;
+    }
+    
     public String getTemas() {
         return temas;
     }
@@ -49,9 +57,6 @@ public class IndexBean implements Serializable {
     public void setTemas(String temas) {
         this.temas = temas;
     }
-    
-    
-
     public List<Integer> getIdClientes() {
         return idClientes;
     }
@@ -99,8 +104,14 @@ public class IndexBean implements Serializable {
         try {
          IndexDAO cd = new IndexDAO();
                 temas=cd.temas();    
+                if(temas.trim().equals("bootstrap1"))
+                {
+                  temas="bootstrap";
+                  errorConexion="EL SERVIDOR NO ESTA CONECTADO A LA BASE DE DATOS, REVISAR LA CONEXION";
+                }
         } catch (Exception e) {
             temas="bootstrap";
+            errorConexion="EL SERVIDOR NO ESTA CONECTADO A LA BASE DE DATOS, REVISAR LA CONEXION";
         }
          
     }
@@ -125,13 +136,14 @@ public class IndexBean implements Serializable {
                 setIdUsuario(us.getIdUsuario());
                 permisos = index.permisos(us.getRol());
                 for (int i = 0; i < permisos.size(); i++) {
-                    /* System.out.println("====PERMISOS "+permisos.get(0).getModulos()+"-"+permisos.get(0).getDescripcion()+" - "+permisos.get(0).getValor());                
+                    System.out.println("====PERMISOS " + permisos.get(i).getDescripcion() + "   MODULO " + permisos.get(i).getModulos() + " POSICION " + i + " VALOR " + permisos.get(i).getValor());
+                   /*System.out.println("====PERMISOS "+permisos.get(0).getModulos()+"-"+permisos.get(0).getDescripcion()+" - "+permisos.get(0).getValor());                
                    System.out.println("====PERMISOS "+permisos.get(1).getModulos()+"-"+permisos.get(1).getDescripcion()+" - "+permisos.get(1).getValor());                
                    System.out.println("====PERMISOS "+permisos.get(2).getModulos()+"-"+permisos.get(2).getDescripcion()+" - "+permisos.get(2).getValor());                
                    System.out.println("====PERMISOS "+permisos.get(3).getModulos()+"-"+permisos.get(3).getDescripcion()+" - "+permisos.get(3).getValor());                
                    System.out.println("====PERMISOS "+permisos.get(4).getModulos()+"-"+permisos.get(4).getDescripcion()+" - "+permisos.get(4).getValor());  
-                     */
-                    //System.out.println("====PERMISOS " + permisos.get(i).getDescripcion() + "   MODULO " + permisos.get(i).getModulos() + " POSICION " + i + " VALOR " + permisos.get(i).getValor());
+                     
+                    System.out.println("====PERMISOS " + permisos.get(i).getDescripcion() + "   MODULO " + permisos.get(i).getModulos() + " POSICION " + i + " VALOR " + permisos.get(i).getValor());*/
                 }
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("permisos", permisos);
                 /* //Ruta no implicita //redireccion="/protegido/principal";*/ /*ruta explicita*/
@@ -167,7 +179,7 @@ public class IndexBean implements Serializable {
     
     --- MODULO 1 clientes
      */
-    public boolean verificarPermisos(int id, int posicion, int valor) {
+    public boolean verificarPermisos(int id, int valor) {
         //List<Permisos> permisos
         List<Permisos> permisos2 = new ArrayList<>();
         boolean temp = false;
@@ -182,7 +194,7 @@ public class IndexBean implements Serializable {
             } else {
                 for (int i = 0; i < permisos2.size(); i++) {
                     //System.out.println(permisos2.get(i).getModulos()+" "+i+" "+permisos2.get(i).getDescripcion()+" "+permisos2.get(i).getValor());
-                    if (permisos2.get(i).getModulos() == id && i == posicion && permisos2.get(i).getValor() == valor) {
+                    if (permisos2.get(i).getModulos() == id && permisos2.get(i).getValor() == valor) {
                         temp = true;
                         break;
                     }
@@ -285,13 +297,17 @@ public class IndexBean implements Serializable {
     public void seguimientoClientes() {
         ClientesDAO cd = new ClientesDAO();
         try {
+            //--si regresa 0 es porque ya existe si no devuelve 1
+            //--y procede a revisar
             if (cd.consultarSeguimiento() > 0) {
                 idClientes = cd.listarClientesActivosId();
                 for (int i = 0; i < idClientes.size(); i++) {
                     if (cd.revisarClientesMora(idClientes.get(i))>0) {
+                        //---0--MORA
                         cd.updateClienteMora(0, idClientes.get(i));
                     }else
-                    {
+                    {   
+                        //---1--ACTIVO
                         cd.updateClienteMora(1, idClientes.get(i));
                     }
                 }
